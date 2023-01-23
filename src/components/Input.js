@@ -7,7 +7,7 @@ export const Input = ({
 //   value,
   placeholder,
 //   setIsFocused,
-//   secureTextEntry,
+  secureTextEntry,
 }) => {
   const [isInputFocused, setIsInputFocused] = useState(false);
 
@@ -32,7 +32,7 @@ export const Input = ({
     //   onChangeText={onInputChange}
     //   value={value}
       placeholder={placeholder}
-    //   secureTextEntry={secureTextEntry}
+      secureTextEntry={secureTextEntry}
     //   onFocus={handleOnFocus}
     //   onBlur={handleOnBlur}
     />
