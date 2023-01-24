@@ -6,16 +6,17 @@ export const Input = ({
 //   onInputChange,
 //   value,
   placeholder,
-//   setIsFocused,
+  setIsFocused,
+  isFocused,
   secureTextEntry,
 }) => {
   const [isInputFocused, setIsInputFocused] = useState(false);
 
 
-  const handleOnFocus = () => {
-    setIsFocused(true);
-    setIsInputFocused(true);
-  };
+  // const handleOnFocus = () => {
+  //   setIsFocused(true);
+  //   setIsInputFocused(true);
+  // };
 
   const handleOnBlur = () => {
     setIsFocused(false);
@@ -33,7 +34,7 @@ export const Input = ({
     //   value={value}
       placeholder={placeholder}
       secureTextEntry={secureTextEntry}
-    //   onFocus={handleOnFocus}
+      isFocused={()=>setIsFocused(true)}
     //   onBlur={handleOnBlur}
     />
   );

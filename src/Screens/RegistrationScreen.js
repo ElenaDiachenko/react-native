@@ -1,23 +1,44 @@
 import { useState } from 'react';
-import { StyleSheet,  View, ImageBackground } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    ImageBackground,
+    Platform,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback,
+    Keyboard
+} from 'react-native';
 const image = require('../../assets/images/auth-bg.jpg')
 import {Input, Title, Button} from '../components'
 
 const RegistrationScreen = () => {
     const [showPwd, setShowPwd] = useState(true);
+    const [isFocused, setIsFocused] = useState(false);
 
-  return (
-    <View style={styles.container}>
-      <ImageBackground source={image} style={styles.image}>
-        <View style={styles.form}>
-        <Title text="Регистрация" />
-        <Input  placeholder={"Логин"}/>
-        <Input  placeholder={"Адрес электронной почты"}/>
-        <Input placeholder={"Пароль"} secureTextEntry={showPwd} />
-        <Button text='Зарегистрироваться'/>
-     </View>
-        </ImageBackground>
-    </View>
+    const keyboardHide = () => {
+        setIsFocused(false);
+        Keyboard.dismiss()
+        
+}
+
+    return (
+       <TouchableWithoutFeedback onPress={keyboardHide}>
+      <View style={styles.container}>
+         
+        <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
+                <View style={{...styles.form, marginBottom: isFocused ? 32 : 78}}>
+                    <Title text="Регистрация" />
+                    <Input  placeholder={"Логин"} isFocused={isFocused} setIsFocused={setIsFocused}/>
+                    <Input  placeholder={"Адрес электронной почты"} isFocused={isFocused} setIsFocused={setIsFocused}/>
+                    <Input placeholder={"Пароль"} secureTextEntry={showPwd} isFocused={isFocused} setIsFocused={setIsFocused} />
+                    <Button text='Зарегистрироваться' onClick={keyboardHide}/>
+                </View>
+           </KeyboardAvoidingView>
+              </ImageBackground>
+              
+            </View>
+            </TouchableWithoutFeedback>
   );
 }
 const styles = StyleSheet.create({
@@ -28,8 +49,8 @@ const styles = StyleSheet.create({
     },
     image: {
     flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    
     },
     form: {
         marginHorizontal: 16,
