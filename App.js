@@ -43,9 +43,4 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // justifyContent: 'center',
   },
-    image: {
-    flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-  },
 });
