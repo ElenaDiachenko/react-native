@@ -14,12 +14,12 @@ export const Input = ({
 
 
   const handleOnFocus = () => {
-    setIsKeyboard && setIsKeyboard(true);
+    setIsKeyboard(true);
     setIsFocused(true);
   };
 
   const handleOnBlur = () => {
-    setIsKeyboard && setIsKeyboard(false);
+    setIsKeyboard(true);
     setIsFocused(false);
   };
   
