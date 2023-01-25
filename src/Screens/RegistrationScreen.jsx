@@ -8,6 +8,7 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     Image,
+    Text
 } from 'react-native';
 const image = require('../../assets/images/auth-bg.jpg')
 const plus = require("../../assets/images/add.png");
@@ -53,12 +54,15 @@ const RegistrationScreen = () => {
                             setIsKeyboard={setIsKeyboard}
                             keyboardType='email-address'
                         />
+                        <View style={styles.password}>
                         <Input value={password}
                             onChangeText={setPassword}
                             placeholder={"Пароль"}
                             secureTextEntry={showPwd} 
                             setIsKeyboard={setIsKeyboard}
                         />
+                        <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>
+                         </View>           
                         <Button text='Зарегистрироваться' onPress={keyboardHide}/>
                     </View>
                 </View>
@@ -91,7 +95,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         
     },
-   
+    password: {
+       position:"relative"
+    },
+    text: {
+    position: "absolute",
+    top: 13,
+    right: 16,
+    fontFamily: "Roboto-Regular",
+    color: "#1B4371",
+    fontSize: 16,
+    
+  },
 });
 
 export default RegistrationScreen
