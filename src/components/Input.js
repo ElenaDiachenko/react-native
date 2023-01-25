@@ -6,6 +6,7 @@ export const Input = ({
   onChangeText,
   value,
   placeholder,
+  keyboardType,
  setIsKeyboard,
   secureTextEntry= false,
 }) => {
@@ -39,7 +40,7 @@ export const Input = ({
       secureTextEntry={secureTextEntry}
       onFocus={handleOnFocus}
       onBlur={handleOnBlur}
-      
+      keyboardType={keyboardType}
     />
   );
 };

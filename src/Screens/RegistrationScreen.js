@@ -12,7 +12,7 @@ const image = require('../../assets/images/auth-bg.jpg')
 import {Input, Title, Button} from '../components'
 
 const RegistrationScreen = () => {
-    const [name, setName] = useState("");
+    const [login, setLogin] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPwd, setShowPwd] = useState(true);
@@ -21,11 +21,14 @@ const RegistrationScreen = () => {
     const keyboardHide = () => {
         setIsKeyboard(false);
         Keyboard.dismiss()
-        console.log(name, email, password)
+        console.log(login, email, password)
+        setEmail("");
+        setPassword("");
+        setLogin("");
     }
     
     const onSubmit = () => {
-    console.log(name, email, password)
+    console.log(login, email, password)
  }
     return (
        <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -36,8 +39,8 @@ const RegistrationScreen = () => {
                 <View style={{...styles.form, marginBottom: isKeyboard ? 32 : 78}}>
                     
                     <Title text="Регистрация" />
-                    <Input  value={name}
-                        onChangeText={setName}
+                    <Input  value={login}
+                        onChangeText={setLogin}
                         placeholder={"Логин"}
                         setIsKeyboard={setIsKeyboard}
                     />
@@ -45,11 +48,13 @@ const RegistrationScreen = () => {
                         onChangeText={setEmail}
                         placeholder={"Адрес электронной почты"}
                         setIsKeyboard={setIsKeyboard}
+                        keyboardType='email-address'
                     />
                     <Input value={password}
                         onChangeText={setPassword}
                         placeholder={"Пароль"}
-                        secureTextEntry={showPwd}  setIsKeyboard={setIsKeyboard} 
+                        secureTextEntry={showPwd} 
+                        setIsKeyboard={setIsKeyboard}
                     />
                     <Button text='Зарегистрироваться' onPress={keyboardHide}/>
                         </View>
