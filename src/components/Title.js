@@ -14,5 +14,6 @@ const styles = StyleSheet.create({
     marginTop: 92,
     marginBottom:33,
     fontSize: 30,
+    alignSelf: "center"
   },
 });

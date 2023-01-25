@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 const image = require('../../assets/images/auth-bg.jpg')
 const plus = require("../../assets/images/add.png");
+const avatar = require("../../assets/images/avatar.jpg");
 import {Input, Title, Button} from '../components'
 
 const RegistrationScreen = () => {
@@ -34,45 +35,45 @@ const RegistrationScreen = () => {
  }
     return (
        <TouchableWithoutFeedback onPress={keyboardHide}>
-      {/* <View style={styles.container}> */}
-         
-        <ImageBackground source={image}  style={styles.image}>
-                <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
-                    <View style={styles.container}>
-                        <View style={styles.avatar}>
-                            <Image source={plus} style={styles.plus} />
-                        </View>
-                <View style={styles.form}>
-                    
-                    <Title text="Регистрация" />
-                    <Input  value={login}
-                        onChangeText={setLogin}
-                        placeholder={"Логин"}
-                        setIsKeyboard={setIsKeyboard}
-                    />
-                    <Input  value={email}
-                        onChangeText={setEmail}
-                        placeholder={"Адрес электронной почты"}
-                        setIsKeyboard={setIsKeyboard}
-                        keyboardType='email-address'
-                    />
-                    <Input value={password}
-                        onChangeText={setPassword}
-                        placeholder={"Пароль"}
-                        secureTextEntry={showPwd} 
-                        setIsKeyboard={setIsKeyboard}
-                    />
-                    <Button text='Зарегистрироваться' onPress={keyboardHide}/>
-                        </View>
-                        </View>
+      <View style={styles.mainContainer}>
+        <ImageBackground source={image}  style={styles.imageBg}>
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
+                <View style={styles.container}>
+                    <View source={avatar} style={styles.avatarBox}>
+                        <Image source={avatar} style={styles.avatar} />
+                        <Image source={plus} style={styles.plus} />
+                    </View>
+                    <View style={styles.form}>
+                        <Title text="Регистрация" />
+                        <Input  value={login}
+                            onChangeText={setLogin}
+                            placeholder={"Логин"}
+                            setIsKeyboard={setIsKeyboard}
+                        />
+                        <Input  value={email}
+                            onChangeText={setEmail}
+                            placeholder={"Адрес электронной почты"}
+                            // setIsKeyboard={setIsKeyboard}
+                            keyboardType='email-address'
+                        />
+                        <Input value={password}
+                            onChangeText={setPassword}
+                            placeholder={"Пароль"}
+                            secureTextEntry={showPwd} 
+                            // setIsKeyboard={setIsKeyboard}
+                        />
+                        <Button text='Зарегистрироваться' onPress={keyboardHide}/>
+                    </View>
+                </View>
            </KeyboardAvoidingView>
               </ImageBackground>
               
-            {/* </View> */}
+            </View>
             </TouchableWithoutFeedback>
   );
 }
 const styles = StyleSheet.create({
+    mainContainer:{flex:1},
     container: {
     position: "relative",
     borderTopRightRadius: 25,
@@ -80,17 +81,14 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "flex-end",
-    // flex: 1,
     backgroundColor: '#FFFFFF',
-    // flexDirection: 'column',
     },
-    image: {
+    imageBg: {
     flex: 1,
     justifyContent: 'flex-end',
     resizeMode:"cover"
     },
-     avatar: {
+    avatarBox: {
     height: 120,
     width: 120,
     backgroundColor: "#F6F6F6",
@@ -98,6 +96,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -60,
     alignSelf: "center",
+    },
+    avatar: {
+    height: 120,
+    width: 120,
+    borderRadius: 16,
+    resizeMode:"cover",
     },
     plus: {
     width: 25,
@@ -107,6 +111,7 @@ const styles = StyleSheet.create({
     right: -12.5,
   },
     form: {
+        display:"flex",
         width:'100%',
         paddingHorizontal: 16,
         
