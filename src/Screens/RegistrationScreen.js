@@ -6,34 +6,54 @@ import {
     Platform,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
-    Keyboard
+    Keyboard,
 } from 'react-native';
 const image = require('../../assets/images/auth-bg.jpg')
 import {Input, Title, Button} from '../components'
 
 const RegistrationScreen = () => {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [showPwd, setShowPwd] = useState(true);
-    const [isFocused, setIsFocused] = useState(false);
+    const [isKeyboard, setIsKeyboard] = useState(false);
 
     const keyboardHide = () => {
-        setIsFocused(false);
+        setIsKeyboard(false);
         Keyboard.dismiss()
-        
-}
-
+        console.log(name, email, password)
+    }
+    
+    const onSubmit = () => {
+    console.log(name, email, password)
+ }
     return (
        <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
          
-        <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+        <ImageBackground source={image}  style={styles.image}>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
-                <View style={{...styles.form, marginBottom: isFocused ? 32 : 78}}>
+                <View style={{...styles.form, marginBottom: isKeyboard ? 32 : 78}}>
+                    
                     <Title text="Регистрация" />
-                    <Input  placeholder={"Логин"} isFocused={isFocused} setIsFocused={setIsFocused}/>
-                    <Input  placeholder={"Адрес электронной почты"} isFocused={isFocused} setIsFocused={setIsFocused}/>
-                    <Input placeholder={"Пароль"} secureTextEntry={showPwd} isFocused={isFocused} setIsFocused={setIsFocused} />
-                    <Button text='Зарегистрироваться' onClick={keyboardHide}/>
-                </View>
+                    <Input  value={name}
+                        onChangeText={setName}
+                        placeholder={"Логин"}
+                        setIsKeyboard={setIsKeyboard}
+                    />
+                    <Input  value={email}
+                        onChangeText={setEmail}
+                        placeholder={"Адрес электронной почты"}
+                        setIsKeyboard={setIsKeyboard}
+                    />
+                    <Input value={password}
+                        onChangeText={setPassword}
+                        placeholder={"Пароль"}
+                        secureTextEntry={showPwd}  setIsKeyboard={setIsKeyboard} 
+                    />
+                    <Button text='Зарегистрироваться' onPress={keyboardHide}/>
+                        </View>
+                        
            </KeyboardAvoidingView>
               </ImageBackground>
               
@@ -45,12 +65,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#212121',
-    flexDirection: 'column',
+    // flexDirection: 'column',
     },
     image: {
     flex: 1,
     justifyContent: 'flex-end',
-    
+    resizeMode:"cover"
     },
     form: {
         marginHorizontal: 16,

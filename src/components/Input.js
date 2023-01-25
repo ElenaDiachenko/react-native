@@ -3,39 +3,43 @@ import { StyleSheet, TextInput } from "react-native";
 
 
 export const Input = ({
-//   onInputChange,
-//   value,
+  onChangeText,
+  value,
   placeholder,
-  setIsFocused,
-  isFocused,
-  secureTextEntry,
+ setIsKeyboard,
+  secureTextEntry= false,
 }) => {
-  const [isInputFocused, setIsInputFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
 
-  // const handleOnFocus = () => {
-  //   setIsFocused(true);
-  //   setIsInputFocused(true);
-  // };
+  const handleOnFocus = () => {
+    setIsKeyboard(true);
+    setIsFocused(true);
+  };
 
   const handleOnBlur = () => {
+    setIsKeyboard(false);
     setIsFocused(false);
-    setIsInputFocused(false);
   };
+  
   return (
     <TextInput
       style={{
         ...styles.input,
-        backgroundColor: isInputFocused ? "#ffffff" : "#F6F6F6",
-        borderColor: isInputFocused ? "#FF6C00" : "#E8E8E8",
-        color: "#212121",
+        backgroundColor: isFocused ? "#ffffff" : "#F6F6F6",
+        borderColor: isFocused ? "#FF6C00" : "#E8E8E8",
+        
       }}
-    //   onChangeText={onInputChange}
-    //   value={value}
+      onChangeText={onChangeText}
+      value={value}
       placeholder={placeholder}
+      placeholderTextColor="#BDBDBD"
+      autoCapitalize="none"
+      autoCorrect={false}
       secureTextEntry={secureTextEntry}
-      isFocused={()=>setIsFocused(true)}
-    //   onBlur={handleOnBlur}
+      onFocus={handleOnFocus}
+      onBlur={handleOnBlur}
+      
     />
   );
 };
@@ -45,11 +49,9 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     height: 50,
-    color: "#BDBDBD",
+    color: "#212121",
     borderWidth: 1,
-    borderColor: "#E8E8E8",
     borderRadius: 8,
-    backgroundColor: "#F6F6F6",
     padding: 16,
     marginBottom: 16,
   },
