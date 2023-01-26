@@ -15,6 +15,8 @@ SplashScreen.preventAutoHideAsync();
 
 const AuthStack = createNativeStackNavigator();
 
+const Tab = createBottomTabNavigator();
+
 export default function App() {
     const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("./assets/fonts/Roboto/Roboto-Regular.ttf"),
