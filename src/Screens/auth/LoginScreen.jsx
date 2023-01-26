@@ -7,32 +7,28 @@ import {
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     Keyboard,
-    Image,
     Text
 } from 'react-native';
-const image = require('../../assets/images/auth-bg.jpg')
-const plus = require("../../assets/images/add.png");
-const avatar = require("../../assets/images/avatar.jpg");
-import {Input, Title, Button, Avatar} from '../components'
+const image = require('../../../assets/images/auth-bg.jpg')
+import {Input, Title, Button,  LinkAuth} from '../../components'
 
-const RegistrationScreen = () => {
-    const [login, setLogin] = useState("");
+const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPwd, setShowPwd] = useState(true);
     const [isKeyboard, setIsKeyboard] = useState(false);
 
+     const navigate = () => navigation.navigate('Register')
     const keyboardHide = () => {
         setIsKeyboard(false);
         Keyboard.dismiss()
-        console.log(login, email, password)
+        console.log( email, password)
         setEmail("");
         setPassword("");
-        setLogin("");
     }
     
     const onSubmit = () => {
-    console.log(login, email, password)
+    console.log( email, password)
  }
     return (
        <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -40,14 +36,9 @@ const RegistrationScreen = () => {
         <ImageBackground source={image}  style={styles.imageBg}>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
                 <View style={styles.container}>
-                    <Avatar/>
+                   
                     <View style={styles.form}>
-                        <Title text="Регистрация" />
-                        <Input value={login}
-                            onChangeText={setLogin}
-                            placeholder={"Логин"}
-                            setIsKeyboard={setIsKeyboard}
-                        />
+                        <Title text="Войти" />
                         <Input  value={email}
                             onChangeText={setEmail}
                             placeholder={"Адрес электронной почты"}
@@ -63,7 +54,8 @@ const RegistrationScreen = () => {
                         />
                         <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>
                          </View>           
-                        <Button text='Зарегистрироваться' onPress={keyboardHide}/>
+                        <Button text='Войти' onPress={keyboardHide} />
+                        <LinkAuth title='Нет аккаунта? Зарегистрироваться' navigate={navigate}/>
                     </View>
                 </View>
            </KeyboardAvoidingView>
@@ -76,7 +68,6 @@ const RegistrationScreen = () => {
 const styles = StyleSheet.create({
     mainContainer:{flex:1},
     container: {
-    position: "relative",
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     width: "100%",
@@ -109,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegistrationScreen
+export default LoginScreen;

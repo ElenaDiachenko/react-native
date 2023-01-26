@@ -1,13 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
-import RegistrationScreen from './src/Screens/RegistrationScreen';
+import RegistrationScreen from './src/Screens/auth/RegistrationScreen';
+import LoginScreen from './src/Screens/auth/LoginScreen';
 import { useFonts } from 'expo-font';
 import { useCallback } from "react";
 import * as SplashScreen from 'expo-splash-screen';
-const image = require('./assets/images/mountain.jpg')
+
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 
+const AuthStack = createNativeStackNavigator();
 
 export default function App() {
     const [fontsLoaded] = useFonts({
@@ -28,7 +32,18 @@ export default function App() {
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
       <StatusBar style="auto" />
-        <RegistrationScreen/>
+      <NavigationContainer>
+        <AuthStack.Navigator
+        initialRouteName="Register"
+        screenOptions={{
+        headerShown: false,
+        }}>
+          <AuthStack.Screen name="Login" component={LoginScreen} />
+          <AuthStack.Screen name="Register" component={RegistrationScreen} />
+        </AuthStack.Navigator>
+      </NavigationContainer>
+        {/* <RegistrationScreen/> */}
+        {/* <LoginScreen/> */}
     </View>
   
   );
