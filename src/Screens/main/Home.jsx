@@ -29,7 +29,7 @@ const Home = () => {
                iconName = focused
                 ? 'add-circle'
                 : 'add-circle-outline';
-              size = 33;
+              size = 40;
             } else if (route.name === "Profile") {
                iconName = focused
                 ? 'person'
@@ -56,7 +56,7 @@ const Home = () => {
           component={PostsScreen}
           options={{
             headerTitle: "Публикации",
-            headerRight: ({focused}) => (
+            headerRight: () => (
               <Feather
                 name="log-out"
                 size={24}
@@ -78,11 +78,5 @@ const Home = () => {
   )
 }
 
-const styles = StyleSheet.create({
-    container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: 'center',
-    },
-});
+
 export default Home
