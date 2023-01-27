@@ -49,6 +49,5 @@ const styles = StyleSheet.create({
   },
 });
 
-// auth
 
   
