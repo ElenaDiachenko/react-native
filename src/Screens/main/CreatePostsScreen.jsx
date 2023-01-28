@@ -2,14 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'expo-camera';
 import { Ionicons} from "@expo/vector-icons";
 import * as MediaLibrary from 'expo-media-library';
-import { StyleSheet, View, Text ,TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard} from 'react-native';
 // import { TouchableOpacity } from "react-native-gesture-handler";
 
 const CreatePostsScreen = () => {
-   let cameraRef = useRef();
+  //  let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
   const [photo, setPhoto] = useState();
+  const [isKeyboard, setIsKeyboard] = useState(false);
+const [cameraRef, setCameraRef] = useState(null);
+  const [startCamera, setStartCamera] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -26,15 +29,23 @@ const CreatePostsScreen = () => {
     return <Text>Permission for camera not granted. Please change this in settings.</Text>
   }
 
+    const keyboardHide = () => {
+    setIsKeyboard(false);
+    Keyboard.dismiss();
+  };
+
  let takePhoto = async () => {
-    let options = {
-      quality: 1,
-      base64: true,
-      exif: false
+   if (cameraRef) {
+      let options = {
+      // quality: 1,
+      // base64: true,
+        exif: true,
+        skipProcessing: true,
     };
 
     const {uri} = await cameraRef.current.takePictureAsync(options);
     setPhoto(uri);
+    }
   };
 
   // if (photo) {
@@ -51,21 +62,40 @@ const CreatePostsScreen = () => {
   //   };
 
   return (
+    <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
-        <Camera style={styles.camera}  ref={cameraRef}>
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
+                <View  style={{
+              ...styles.form,
+              marginBottom: Platform.OS === "ios" && isKeyboard ? 80 : 20,
+            }}>
+            <View style={{...styles.containerCamera,borderColor: photo ? '#000000' : '#E8E8E8'}}>
+      <Camera
+        style={{ ...styles.camera}}
+         ref={(camRef) => setCameraRef(camRef)}
+          autoFocus='auto'
+        >
           {photo && (
-          <View style={styles.takePhotoContainer}>
             <Image
               source={{ uri: photo }}
-              style={{ height: 200, width: 200 }}
+              style={styles.preview}
             />
-          </View>
         )}
-            <TouchableOpacity style={styles.photoIcon} onPress={takePhoto}>
-              <Ionicons name="camera-outline" size={24} color="#BDBDBD" />
+            <TouchableOpacity style={{
+                  ...styles.photoIcon,
+                  backgroundColor: photo ? 'rgba(255, 255, 255, 0.3)' : '#ffffff'
+                }}
+                activeOpacity={0.8} onPress={takePhoto}>
+              <Ionicons name="camera-outline" size={24} color={photo ? '#ffffff' : '#BDBDBD'} />
           </TouchableOpacity>
-          </Camera>
+        </Camera>
         </View>
+                    </View>
+           </KeyboardAvoidingView>
+              
+            </View>
+            </TouchableWithoutFeedback>
+   
   )
 }
 
@@ -73,21 +103,39 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
-    
   },
-   camera: {
-    height: 240,
+    form: {
+        flex:1,
+        paddingHorizontal: 16,
+        
+    },
+  containerCamera: {
+    position: "relative",
+    height:240,
     borderRadius: 8,
+    borderWidth: 1,
+    backgroundColor: "#F6F6F6",
     marginBottom: 32,
     marginTop: 32,
-    backgroundColor: "#e8e8e8",
-    border: "1px solid #E8E8E8",
+    
+  },
+  camera: {
+    height: "100%",
+    width:"100%",
+    borderRadius: 8,
+    // backgroundColor: "#F6F6F6",
+    // border: "1px solid #E8E8E8",
     justifyContent: "center",
     alignItems: "center",
-   marginHorizontal:16,
   },
- 
+ preview: {
+    flex: 1,
+   height: 240,
+     borderRadius: 8,
+    width: "100%"
+  },
   photoIcon: {
+    position: "absolute",
     height: 60,
     width: 60,
     borderRadius: 30,
@@ -99,6 +147,8 @@ takePhotoContainer: {
     position: "absolute",
     top: 50,
     left: 10,
+  // height: "100%",
+  // width:'100%',
     borderColor: "#fff",
     borderWidth: 1,
   },
