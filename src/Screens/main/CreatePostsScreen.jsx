@@ -113,7 +113,7 @@ const [cameraRef, setCameraRef] = useState(null);
                   style={styles.input}
                   placeholder='Название...'
                   placeholderTextColor="#BDBDBD"
-                  onFocus={() => setIsShownKeyboard(true)}
+                  onFocus={() => setIsKeyboard(true)}
                   onChangeText={setDescription}
                   value={description}
               />
@@ -122,7 +122,7 @@ const [cameraRef, setCameraRef] = useState(null);
                   style={{ ...styles.input, paddingLeft: 28}}
                   placeholder='Местность...'
                   placeholderTextColor="#BDBDBD"
-                  onFocus={() => setIsShownKeyboard(true)}
+                  onFocus={() => setIsKeyboard(true)}
                   onChangeText={setLocation}
                   value={location}
                 />
