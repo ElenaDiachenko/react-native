@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'expo-camera';
 import { Ionicons} from "@expo/vector-icons";
 import * as MediaLibrary from 'expo-media-library';
-import { StyleSheet, View, Text ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard} from 'react-native';
+import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard} from 'react-native';
 // import { TouchableOpacity } from "react-native-gesture-handler";
 
 const CreatePostsScreen = () => {
@@ -12,7 +12,10 @@ const CreatePostsScreen = () => {
   const [photo, setPhoto] = useState();
   const [isKeyboard, setIsKeyboard] = useState(false);
 const [cameraRef, setCameraRef] = useState(null);
-  const [startCamera, setStartCamera] = useState(true);
+  const [startCamera, setStartCamera] = useState(false);
+  const [description, setDescription] = useState('');
+  const [location, setLocation] = useState("")
+
 
   useEffect(() => {
     (async () => {
@@ -43,7 +46,7 @@ const [cameraRef, setCameraRef] = useState(null);
         skipProcessing: true,
     };
 
-    const {uri} = await cameraRef.current.takePictureAsync(options);
+    const {uri} = await cameraRef.takePictureAsync(options);
     setPhoto(uri);
     }
   };
@@ -88,14 +91,64 @@ const [cameraRef, setCameraRef] = useState(null);
                 activeOpacity={0.8} onPress={takePhoto}>
               <Ionicons name="camera-outline" size={24} color={photo ? '#ffffff' : '#BDBDBD'} />
           </TouchableOpacity>
-        </Camera>
-        </View>
-                    </View>
-           </KeyboardAvoidingView>
-              
+              </Camera>
+               {!photo?(<TouchableOpacity
+                onPress={()=>{}}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.uploadEditButton}>
+                  Загрузить фото из галереи
+                </Text>
+              </TouchableOpacity>):(<TouchableOpacity
+               onPress={()=>{}}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.uploadEditButton}>
+                  Редактировать фото
+                </Text>
+              </TouchableOpacity>)}
             </View>
-            </TouchableWithoutFeedback>
-   
+            <View>
+                <TextInput
+                  style={styles.input}
+                  placeholder='Название...'
+                  placeholderTextColor="#BDBDBD"
+                  onFocus={() => setIsShownKeyboard(true)}
+                  onChangeText={setDescription}
+                  value={description}
+              />
+              <View style={{marginBottom: 32}}>
+                <TextInput
+                  style={{ ...styles.input, paddingLeft: 28}}
+                  placeholder='Местность...'
+                  placeholderTextColor="#BDBDBD"
+                  onFocus={() => setIsShownKeyboard(true)}
+                  onChangeText={setLocation}
+                  value={location}
+                />
+                <Ionicons
+                  name="location-outline"
+                  size={24}
+                  color="#BDBDBD"
+                  style={styles.locationIcon}
+                />
+              </View>
+               <TouchableOpacity
+              onPress={()=>{}}
+              style={{ ...styles.button, backgroundColor: photo ? '#FF6C00' : '#F6F6F6' }}
+              activeOpacity={0.8}
+            >
+              <Text
+                style={{ ...styles.textBtnSubmit, color: photo ? '#ffffff' : '#BDBDBD' }}
+              >
+                Опубликовать
+              </Text>
+            </TouchableOpacity>
+            </View>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
+  </TouchableWithoutFeedback>
   )
 }
 
@@ -123,8 +176,6 @@ const styles = StyleSheet.create({
     height: "100%",
     width:"100%",
     borderRadius: 8,
-    // backgroundColor: "#F6F6F6",
-    // border: "1px solid #E8E8E8",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -143,66 +194,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.3)",
   },
-takePhotoContainer: {
-    position: "absolute",
-    top: 50,
-    left: 10,
-  // height: "100%",
-  // width:'100%',
-    borderColor: "#fff",
-    borderWidth: 1,
-  },
-  addPhoto: { marginTop: 8 },
-  upLoadPhotoText: {
-    fontFamily: "Roboto-Regular",
-    color: "#ccc",
+ uploadEditButton: {
     fontSize: 16,
-    textAlign: "left",
+    fontFamily: "Roboto-Regular",
+    color: '#bdbdbd',
+    
+    marginTop: 8,
+    marginBottom: 32,
   },
   input: {
     color: "#000",
     borderColor: "#E8E8E8",
     borderBottomWidth: 1,
-    height: 40,
+    height: 50,
     marginBottom: 16,
     fontFamily: "Roboto-Regular",
     fontSize: 16,
   },
-  button: {
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    marginTop: 16,
-  },
-  textButton: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  btnText: {
-    textAlign: "center",
-    fontFamily: "Roboto-Regular",
-    fontSize: 18,
-  },
   locationIcon: {
     position: "absolute",
     left: 0,
-    top: 7,
+    top: 8,
   },
-  deleteButtonBox: {
-    alignItems: "center",
+ 
+   button: {
+    height: 50,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems:'center',
+    marginTop: 46,
   },
-  deleteButton: {
-    width: 70,
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    height: 40,
-    backgroundColor: "#F6F6F6",
-    borderRadius: 20,
-    marginBottom: 36,
+ textBtnSubmit: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
   },
 });
 
