@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'expo-camera';
-import { Ionicons} from "@expo/vector-icons";
+import { Ionicons, Feather} from "@expo/vector-icons";
 import * as MediaLibrary from 'expo-media-library';
 import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard} from 'react-native';
 // import { TouchableOpacity } from "react-native-gesture-handler";
@@ -133,8 +133,8 @@ const [cameraRef, setCameraRef] = useState(null);
                   onChangeText={setLocation}
                   value={location}
                 />
-                <Ionicons
-                  name="location-outline"
+                <Feather
+                  name="map-pin"
                   size={24}
                   color="#BDBDBD"
                   style={styles.locationIcon}

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { EvilIcons, Feather } from '@expo/vector-icons';
+import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
 
 const defaultAvatar = require('../../../assets/images/avatar.jpg');
+const initPhoto = require('../../../assets/images/forrest.jpg');
 
 const PostsScreen = ({ navigation, route }) => {
     return (
@@ -15,9 +17,28 @@ const PostsScreen = ({ navigation, route }) => {
             </View>
           </View>
           <View style={styles.contentBox}>
-             <Text>
+             <Image
+              source={initPhoto}
+              style={{ height: 240, borderRadius: 8, marginBottom:8 }}
+            />
+            <Text style={styles.description}>
             PostsScreen
-          </Text>
+            </Text>
+            <View style={styles.comments}>
+              <View style={{flexDirection:"row", marginRight: 58, alignItems:"flex-end"}}>
+                <EvilIcons name="comment" size={29} color="#BDBDBD" style={{marginRight:6}} />
+                <Text style={styles.commentsCount}>0</Text>
+              </View>
+              <View style={{flexDirection:"row", alignItems:"flex-end"}}>
+                <Feather
+                  name="map-pin"
+                  size={24}
+                  color="#BDBDBD"
+                  style={{marginRight:6}}
+                /> 
+                <Text style={styles.location}>Location gfhjkhjghg</Text>
+              </View>
+            </View>
           </View>
         </View>
          
@@ -53,12 +74,40 @@ const styles = StyleSheet.create({
     color: '#212121',
   },
   userEmail: {
-     fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 11,
     lineHeight: 13,
     color: '#21212180'
   },
-  contentBox:{}
+  contentBox: {
+  },
+ 
+  description: {
+    color: "#212121",
+    fontFamily: "Roboto-Medium",
+    fontSize: 16,
+    lineHeight: 19,
+    marginBottom:11,
+  },
+  comments: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: "auto",
+  },
+  commentsCount: {
+    color: "#BDBDBD",
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+  },
+  location: {
+    color: "#212121",
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+    textDecorationLine: "underline",
+    marginLeft: 4,
+  }
 });
 
 export default PostsScreen
