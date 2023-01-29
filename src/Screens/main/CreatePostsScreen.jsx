@@ -5,7 +5,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard} from 'react-native';
 // import { TouchableOpacity } from "react-native-gesture-handler";
 
-const CreatePostsScreen = () => {
+const CreatePostsScreen = ({ navigation }) => {
   //  let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
@@ -50,6 +50,13 @@ const [cameraRef, setCameraRef] = useState(null);
     setPhoto(uri);
     }
   };
+
+  const publishPost = async () => {
+    if (photo) {
+      console.log(photo)
+       navigation.navigate("Posts", { photo });
+    }
+  }
 
   // if (photo) {
   //   let sharePic = () => {
@@ -134,7 +141,7 @@ const [cameraRef, setCameraRef] = useState(null);
                 />
               </View>
                <TouchableOpacity
-              onPress={()=>{}}
+              onPress={publishPost}
               style={{ ...styles.button, backgroundColor: photo ? '#FF6C00' : '#F6F6F6' }}
               activeOpacity={0.8}
             >
