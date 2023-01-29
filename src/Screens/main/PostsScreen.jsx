@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { EvilIcons, Feather } from '@expo/vector-icons';
-import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList ,TouchableOpacity} from 'react-native';
 
 const defaultAvatar = require('../../../assets/images/avatar.jpg');
 const initPhoto = require('../../../assets/images/forrest.jpg');
@@ -22,26 +22,37 @@ const PostsScreen = ({ navigation, route }) => {
               <Text style={styles.userEmail}>userEmail</Text>
             </View>
           </View>
+
           <View style={styles.contentBox}>
              <Image
               source={posts.length ? posts[0] : initPhoto}
               style={{ height: 240, borderRadius: 8, marginBottom:8 }}
             />
             <Text style={styles.description}>
-            PostsScreen
+            Forrest
             </Text>
-            <View style={styles.comments}>
-              <View style={{flexDirection:"row", marginRight: 58, alignItems:"flex-end"}}>
+
+            <View style={styles.info}>
+              <TouchableOpacity
+                // onPress={() => navigation.navigate("Comments")}
+                activeOpacity={0.8}
+                style={{ flexDirection: "row", marginRight: 58, alignItems: "flex-end" }}
+              >
                 <EvilIcons name="comment" size={29} color="#BDBDBD" style={{marginRight:6}} />
                 <Text style={styles.commentsCount}>0</Text>
-              </View>
-              <View style={{flexDirection:"row", alignItems:"flex-end"}}>
+              </TouchableOpacity>
+              <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+                <TouchableOpacity
+                // onPress={() => navigation.navigate("Comments")}
+                activeOpacity={0.8}
+                >
                 <Feather
                   name="map-pin"
                   size={24}
                   color="#BDBDBD"
                   style={{marginRight:6}}
-                /> 
+                  /> 
+                  </TouchableOpacity>
                 <Text style={styles.location}>Location gfhjkhjghg</Text>
               </View>
             </View>
@@ -96,7 +107,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     marginBottom:11,
   },
-  comments: {
+  info: {
     flexDirection: "row",
     alignItems: "center",
     marginRight: "auto",

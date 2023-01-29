@@ -54,16 +54,16 @@ const [cameraRef, setCameraRef] = useState(null);
     };
 
      const { uri } = await cameraRef.takePictureAsync(options);
-     const location = await Location.getCurrentPositionAsync();
-     console.log('location', location.coords.latitude, location.coords.longitude)
      setPhoto(uri);
-     setLocation(location);
     }
   };
 
   const publishPost = async () => {
     if (photo) {
       console.log(photo)
+      const location = await Location.getCurrentPositionAsync();
+     console.log('location', location.coords.latitude, location.coords.longitude)
+
        navigation.navigate("Posts", { photo });
     }
   }
@@ -215,7 +215,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Roboto-Regular",
     color: '#bdbdbd',
-    
     marginTop: 8,
     marginBottom: 32,
   },
