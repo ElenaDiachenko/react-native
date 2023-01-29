@@ -6,6 +6,12 @@ const defaultAvatar = require('../../../assets/images/avatar.jpg');
 const initPhoto = require('../../../assets/images/forrest.jpg');
 
 const PostsScreen = ({ navigation, route }) => {
+  const [posts, setPosts] = useState([]);
+
+  // useEffect(() => {
+  //     setPosts(prev=>[...prev, route.params])
+  //  }, [route.params])
+  
     return (
       <View style={styles.container}>
         <View style={styles.postBox}>
@@ -18,7 +24,7 @@ const PostsScreen = ({ navigation, route }) => {
           </View>
           <View style={styles.contentBox}>
              <Image
-              source={initPhoto}
+              source={posts.length ? posts[0] : initPhoto}
               style={{ height: 240, borderRadius: 8, marginBottom:8 }}
             />
             <Text style={styles.description}>
@@ -51,6 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal:16,
     justifyContent: "flex-start",
+    alignItems:"center",
     backgroundColor: "#ffffff",
   },
   postBox:{},

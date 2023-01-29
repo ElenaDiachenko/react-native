@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'expo-camera';
+import * as Location from 'expo-location';
 import { Ionicons, Feather} from "@expo/vector-icons";
 import * as MediaLibrary from 'expo-media-library';
 import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard} from 'react-native';
@@ -8,6 +9,7 @@ import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWit
 const CreatePostsScreen = ({ navigation }) => {
   //  let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
+   const [hasLocationPermission, setHasLocationPermission] = useState(null);
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
   const [photo, setPhoto] = useState();
   const [isKeyboard, setIsKeyboard] = useState(false);
@@ -21,13 +23,18 @@ const [cameraRef, setCameraRef] = useState(null);
     (async () => {
       const cameraPermission = await Camera.requestCameraPermissionsAsync();
       const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
+      const locationPermission = await Location.requestForegroundPermissionsAsync();
       setHasCameraPermission(cameraPermission.status === "granted");
       setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
+      setHasLocationPermission(locationPermission.status === 'granted');
+
     })();
   }, []);
 
-    if (hasCameraPermission === undefined) {
+    if (hasCameraPermission === undefined || hasLocationPermission === undefined) {
     return <Text>Requesting permissions...</Text>
+    }else if (!hasLocationPermission ) {
+    return <Text>Permission for location not granted. Please change this in settings.</Text>
   } else if (!hasCameraPermission) {
     return <Text>Permission for camera not granted. Please change this in settings.</Text>
   }
@@ -46,8 +53,11 @@ const [cameraRef, setCameraRef] = useState(null);
         skipProcessing: true,
     };
 
-    const {uri} = await cameraRef.takePictureAsync(options);
-    setPhoto(uri);
+     const { uri } = await cameraRef.takePictureAsync(options);
+     const location = await Location.getCurrentPositionAsync();
+     console.log('location', location.coords.latitude, location.coords.longitude)
+     setPhoto(uri);
+     setLocation(location);
     }
   };
 
