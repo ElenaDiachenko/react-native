@@ -7,7 +7,7 @@ import {
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     Keyboard,
-    Text,
+    Text,v
     
 } from 'react-native';
 const image = require('../../../assets/images/auth-bg.jpg')
@@ -25,15 +25,29 @@ const RegistrationScreen = ({ navigation }) => {
     const keyboardHide = () => {
         setIsKeyboard(false);
         Keyboard.dismiss()
-        console.log(login, email, password)
+    }
+    
+      const reset = () => {
         setEmail("");
         setPassword("");
         setLogin("");
     }
-    
+
     const onSubmit = () => {
-    console.log(login, email, password)
- }
+        keyboardHide();
+        const credentials = {
+            login, 
+            email,
+            password
+        }
+        console.log(credentials);
+        reset()
+    }
+     const showHidePwd = () => {
+    setShowPwd(!showPwd);
+  }
+
+  
     return (
        <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.mainContainer}>
@@ -61,9 +75,9 @@ const RegistrationScreen = ({ navigation }) => {
                             secureTextEntry={showPwd} 
                             setIsKeyboard={setIsKeyboard}
                         />
-                        <Text onPress={() => {if(password){setShowPwd(!showPwd)} }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>
+                        <Text onPress={showHidePwd} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>
                          </View>           
-                        <Button text='Зарегистрироваться' onPress={keyboardHide} />
+                        <Button text='Зарегистрироваться' onPress={onSubmit} />
                         <LinkAuth title='Уже есть аккаунт? Войти' navigate={navigate} />
                     </View>
                 </View>

@@ -23,7 +23,7 @@ export default function App() {
     "Roboto-Medium": require("./assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Bold": require("./assets/fonts/Roboto/Roboto-Bold.ttf"),
     });
-  const [isAuth, setIsAuth] = useState(1)
+  const [isAuth, setIsAuth] = useState(null)
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
