@@ -4,6 +4,8 @@ import { StyleSheet, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useCallback } from "react";
 import * as SplashScreen from 'expo-splash-screen';
+import { Provider } from 'react-redux';
+import {store} from './src/redux/store'
 import Home from './src/Screens/main/Home';
 import Auth from './src/Screens/auth/Auth';
 
@@ -32,13 +34,16 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
+  console.log(store.getState())
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
+    <Provider store={store}>
+      <View style={styles.container} onLayout={onLayoutRootView}>
       <StatusBar style="auto" />
       <NavigationContainer>
         {isAuth ? <Home/>:<Auth/>}
       </NavigationContainer>
     </View>
+    </Provider>
   
   );
 }

@@ -38,7 +38,7 @@ export const PostsScreen = ({ navigation, route }) => {
                 activeOpacity={0.8}
                 style={{ flexDirection: "row", marginRight: 58, alignItems: "flex-end" }}
               >
-                <EvilIcons name="comment" size={29} color="#BDBDBD" style={{marginRight:6}} />
+                <EvilIcons name="comment" size={30} color="#BDBDBD" style={{marginRight:6,transform: [{rotateY: '180deg'}]}} />
                 <Text style={styles.commentsCount}>0</Text>
               </TouchableOpacity>
               <View style={{ flexDirection: "row", alignItems: "flex-end" }}>

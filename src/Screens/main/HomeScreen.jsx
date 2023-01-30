@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { CommentsScreen, PostsScreen, MapScreen } from '../nested';
-import { Ionicons, Feather} from "@expo/vector-icons";
+import {  Feather} from "@expo/vector-icons";
 
 const NestedStack = createNativeStackNavigator();
 
