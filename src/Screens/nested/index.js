@@ -1,5 +1,5 @@
-import CommentsScreen from './CommentsScreen';
-import MapScreen from './MapScreen';
-import PostsScreen from './PostsScreen';
+import  { PostsScreen } from './PostsScreen';
+import  { CommentsScreen } from './CommentsScreen';
+import { MapScreen } from './MapScreen';
 
-export {CommentsScreen, PostsScreen, MapScreen}
+export {PostsScreen,CommentsScreen,MapScreen }

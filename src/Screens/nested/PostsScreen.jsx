@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, Image, FlatList ,TouchableOpacity} from 'react-
 const defaultAvatar = require('../../../assets/images/avatar.jpg');
 const initPhoto = require('../../../assets/images/forrest.jpg');
 
-const PostsScreen = ({ navigation, route }) => {
+export const PostsScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
 
   // useEffect(() => {
@@ -34,7 +34,7 @@ const PostsScreen = ({ navigation, route }) => {
 
             <View style={styles.info}>
               <TouchableOpacity
-                // onPress={() => navigation.navigate("Comments")}
+                onPress={() => navigation.navigate("Comments")}
                 activeOpacity={0.8}
                 style={{ flexDirection: "row", marginRight: 58, alignItems: "flex-end" }}
               >
@@ -43,7 +43,7 @@ const PostsScreen = ({ navigation, route }) => {
               </TouchableOpacity>
               <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
                 <TouchableOpacity
-                // onPress={() => navigation.navigate("Comments")}
+                onPress={() => navigation.navigate("Map")}
                 activeOpacity={0.8}
                 >
                 <Feather
@@ -128,4 +128,3 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PostsScreen
