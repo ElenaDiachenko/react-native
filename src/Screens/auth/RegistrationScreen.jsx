@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import {registerUser} from '../../redux/auth/authOperations'
 import {
     StyleSheet,
     View,
@@ -7,13 +9,13 @@ import {
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     Keyboard,
-    Text,v
-    
+    Text,    
 } from 'react-native';
 const image = require('../../../assets/images/auth-bg.jpg')
 import {Input, Title, Button, Avatar,LinkAuth} from '../../components'
 
 const RegistrationScreen = ({ navigation }) => {
+    const dispatch = useDispatch()
     const [login, setLogin] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -33,15 +35,16 @@ const RegistrationScreen = ({ navigation }) => {
         setLogin("");
     }
 
-    const onSubmit = () => {
+    const onSubmit = async() => {
         keyboardHide();
         const credentials = {
             login, 
             email,
             password
         }
-        console.log(credentials);
-        reset()
+         console.log(credentials);
+        await dispatch(registerUser(credentials))
+        // reset()
     }
      const showHidePwd = () => {
     setShowPwd(!showPwd);
