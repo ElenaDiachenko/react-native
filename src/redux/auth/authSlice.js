@@ -19,6 +19,7 @@ const initialState = {
         changeAuthStatus: (state, { payload }) => ({
       ...state,
       authStatus: payload.authStatus,
-    }),
+      }),
+        logout:()=>initialState
     },
 })
