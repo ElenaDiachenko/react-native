@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons, Feather} from "@expo/vector-icons";
+import { Ionicons} from "@expo/vector-icons";
 import { StyleSheet, View, Text } from 'react-native';
 
 import HomeScreen from './HomeScreen'

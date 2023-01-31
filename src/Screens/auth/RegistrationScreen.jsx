@@ -15,7 +15,8 @@ const image = require('../../../assets/images/auth-bg.jpg')
 import {Input, Title, Button, Avatar,LinkAuth} from '../../components'
 
 const RegistrationScreen = ({ navigation }) => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+
     const [login, setLogin] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

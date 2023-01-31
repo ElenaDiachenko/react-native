@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword,signInWithEmailAndPassword, signOut ,  onAuthStateChanged, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword, signOut ,  onAuthStateChanged, updateProfile, updateCurrentUser } from 'firebase/auth';
 import { Alert } from "react-native";
 import { auth } from '../../firebase/config'
 import { authSlice} from "./authSlice";
@@ -7,16 +7,21 @@ const { changeAuthStatus,updateUserProfile,logout } = authSlice.actions;
 export const registerUser = ({ login,email, password}) => async (dispatch, getState) => {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
-  
+        await updateProfile(auth.currentUser, {
+          displayName:login,
+        })
         const user = auth.currentUser;
         const currentUser = {
           id: user.uid,
-          login,
+          login:user.displayName,
           email: user.email,
         }
         dispatch(updateUserProfile(currentUser));
+
+
         const state = getState();
         console.log(state, 'state redux REGISTER')
+
         Alert.alert(`Wellcome, ${login}`)
       } catch (error) {
        const errorCode = error.code;
@@ -38,23 +43,14 @@ export const registerUser = ({ login,email, password}) => async (dispatch, getSt
      };
 }
 
-export const loginUser = ({ email, password }) => async (dispatch, getState) => {
+
+export const loginUser = ({ email, password }) => async () => {
     try {
        await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      const user = auth.currentUser;
-        console.log(user, 'LOGIN USER')
-        const currentUser = {
-          id: user.uid,
-          login:user.displayName,
-          email: user.email,
-        }
-       dispatch(updateUserProfile(currentUser));
-        const state = getState();
-        console.log(state, 'state redux LOGIN')
         Alert.alert(`Wellcome, ${login}`)
     } catch (error) {
        const errorCode = error.code;
@@ -77,6 +73,24 @@ export const loginUser = ({ email, password }) => async (dispatch, getState) => 
       };
     }
 
+export const changeAuthStatusUser = () => async (dispatch, getState) => {
+ await onAuthStateChanged(auth, user => {
+    if (user) {
+      const userUpdatedProfile = {
+        id: user.uid,
+        // login: user.displayName ||"nickname",
+        email: user.email,
+      }
+console.log(user, 'CHANGE USER')
+      dispatch(updateUserProfile(userUpdatedProfile));
+      dispatch(changeAuthStatus({ authStatus: true }));
+        const state = getState();
+        console.log(state, 'state redux STATUS')
+    }
+  });
+};
+
+    
 export const logoutUser = () => async (dispatch, getState) => {
     try {
      await signOut(auth);
