@@ -52,7 +52,7 @@ const RegistrationScreen = ({ navigation }) => {
 
   
     return (
-       <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.mainContainer}>
         <ImageBackground source={image}  style={styles.imageBg}>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
@@ -78,7 +78,7 @@ const RegistrationScreen = ({ navigation }) => {
                             secureTextEntry={showPwd} 
                             setIsKeyboard={setIsKeyboard}
                         />
-                        <Text onPress={showHidePwd} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>
+                        {password ? <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>:null}
                          </View>           
                         <Button text='Зарегистрироваться' onPress={onSubmit} />
                         <LinkAuth title='Уже есть аккаунт? Войти' navigate={navigate} />

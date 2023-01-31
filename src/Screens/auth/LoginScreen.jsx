@@ -65,7 +65,7 @@ const LoginScreen = ({ navigation }) => {
                             secureTextEntry={showPwd} 
                             setIsKeyboard={setIsKeyboard}
                         />
-                        <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>
+                        {password ? <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>:null}
                          </View>           
                         <Button text='Войти' onPress={onSubmit} />
                         <LinkAuth title='Нет аккаунта? Зарегистрироваться' navigate={navigate}/>
