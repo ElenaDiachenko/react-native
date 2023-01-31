@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import {loginUser} from '../../redux/auth/authOperations'
 import {
     StyleSheet,
     View,
@@ -9,10 +11,12 @@ import {
     Keyboard,
     Text
 } from 'react-native';
+
 const image = require('../../../assets/images/auth-bg.jpg')
 import {Input, Title, Button,  LinkAuth} from '../../components'
 
 const LoginScreen = ({ navigation }) => {
+    const dispatch= useDispatch()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPwd, setShowPwd] = useState(true);
@@ -22,14 +26,23 @@ const LoginScreen = ({ navigation }) => {
     const keyboardHide = () => {
         setIsKeyboard(false);
         Keyboard.dismiss()
-        console.log( email, password)
+    }
+      const reset = () => {
         setEmail("");
         setPassword("");
+        setLogin("");
     }
-    
-    const onSubmit = () => {
-    console.log( email, password)
- }
+
+    const onSubmit = async() => {
+        keyboardHide();
+        const credentials = {
+            email,
+            password
+        }
+        await dispatch(loginUser(credentials))
+        // reset()
+    }
+
     return (
        <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.mainContainer}>
@@ -54,7 +67,7 @@ const LoginScreen = ({ navigation }) => {
                         />
                         <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>
                          </View>           
-                        <Button text='Войти' onPress={keyboardHide} />
+                        <Button text='Войти' onPress={onSubmit} />
                         <LinkAuth title='Нет аккаунта? Зарегистрироваться' navigate={navigate}/>
                     </View>
                 </View>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { useFonts } from 'expo-font';
