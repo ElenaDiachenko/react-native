@@ -76,13 +76,13 @@ export const loginUser = ({ email, password }) => async () => {
 export const changeAuthStatusUser = () => async (dispatch, getState) => {
  await onAuthStateChanged(auth, user => {
     if (user) {
-      const userUpdatedProfile = {
+      const currentUser = {
         id: user.uid,
-        // login: user.displayName ||"nickname",
+        login: user.displayName,
         email: user.email,
       }
 console.log(user, 'CHANGE USER')
-      dispatch(updateUserProfile(userUpdatedProfile));
+      dispatch(updateUserProfile(currentUser));
       dispatch(changeAuthStatus({ authStatus: true }));
         const state = getState();
         console.log(state, 'state redux STATUS')
