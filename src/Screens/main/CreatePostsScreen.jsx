@@ -77,14 +77,19 @@ const [cameraRef, setCameraRef] = useState(null);
      await uploadBytes(storageRef, file).then(() => {
       Alert.alert(`photo is uploaded`);
     });
-    
     const photoURL = await getDownloadURL(ref(storage, storageRef));
-
       return photoURL;
+
     } catch (error) {
-      console.log(error)
+      const errorCode = error.code;
+       if (errorCode == 'storage/cannot-slice-blob') {
+         Alert.alert('Try uploading again after verifying that the file has not changed');
+       }
+       else {
+         Alert.alert('Something went wrong. Try again later');
+       }
+       console.log(error);
     }
-  
   }
 
   
