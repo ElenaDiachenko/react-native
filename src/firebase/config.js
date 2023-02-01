@@ -3,8 +3,6 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
 import firebase from "firebase/compat/app";
-import "firebase/storage";
-import "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDaGUu3hNg5TrtWNo84O5214L4HbXNcpQI",
@@ -16,9 +14,9 @@ const firebaseConfig = {
   measurementId: "G-VPZ6B72WB4"
 };
 
-// if (!firebase.apps.length) {
-//   firebase.initializeApp(firebaseConfig);
-// }
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 const app = initializeApp(firebaseConfig);
 

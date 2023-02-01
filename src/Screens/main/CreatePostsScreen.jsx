@@ -3,8 +3,10 @@ import { Camera } from 'expo-camera';
 import * as Location from 'expo-location';
 import { Ionicons, Feather} from "@expo/vector-icons";
 import * as MediaLibrary from 'expo-media-library';
-import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard} from 'react-native';
-// import { TouchableOpacity } from "react-native-gesture-handler";
+import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard, Alert} from 'react-native';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {storage} from '../../firebase/config'
+
 
 const CreatePostsScreen = ({ navigation }) => {
   //  let cameraRef = useRef();
@@ -35,7 +37,8 @@ const [cameraRef, setCameraRef] = useState(null);
     return <Text>Requesting permissions...</Text>
     }else if (!hasLocationPermission ) {
     return <Text>Permission for location not granted. Please change this in settings.</Text>
-  } else if (!hasCameraPermission) {
+    } else if (!hasCameraPermission) {
+      
     return <Text>Permission for camera not granted. Please change this in settings.</Text>
   }
 
@@ -58,9 +61,37 @@ const [cameraRef, setCameraRef] = useState(null);
     }
   };
 
+
+  const uploadPhotoToServer = async () => {
+    if (!photo) {
+      console.log(photo);
+      return
+    };
+
+    try {
+        const response = await fetch(photo);
+    const file = await response.blob();
+    const fileId = Date.now().toString();
+
+    const storageRef = ref(storage, `images/${fileId}`);
+     await uploadBytes(storageRef, file).then(() => {
+      Alert.alert(`photo is uploaded`);
+    });
+    
+    const photoURL = await getDownloadURL(ref(storage, storageRef));
+
+      return photoURL;
+    } catch (error) {
+      console.log(error)
+    }
+  
+  }
+
+  
   const publishPost = async () => {
     if (photo) {
       console.log(photo)
+     
       const location = await Location.getCurrentPositionAsync();
      console.log('location', location.coords.latitude, location.coords.longitude)
 
@@ -81,6 +112,7 @@ const [cameraRef, setCameraRef] = useState(null);
   //     });
   //   };
 
+ 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
@@ -151,7 +183,7 @@ const [cameraRef, setCameraRef] = useState(null);
                 />
               </View>
                <TouchableOpacity
-              onPress={publishPost}
+              onPress={uploadPhotoToServer}
               style={{ ...styles.button, backgroundColor: photo ? '#FF6C00' : '#F6F6F6' }}
               activeOpacity={0.8}
             >
