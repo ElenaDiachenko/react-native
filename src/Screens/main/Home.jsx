@@ -1,7 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons} from "@expo/vector-icons";
-import { StyleSheet, View, Text } from 'react-native';
 
 import HomeScreen from './HomeScreen'
 import CreatePostsScreen from './CreatePostsScreen'
@@ -10,6 +9,7 @@ import ProfileScreen from './ProfileScreen'
 const MainTab = createBottomTabNavigator();
 
 const Home = () => {
+  
   return (
     <MainTab.Navigator
       initialRouteName={HomeScreen}

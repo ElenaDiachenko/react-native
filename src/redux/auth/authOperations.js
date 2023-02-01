@@ -51,7 +51,7 @@ export const loginUser = ({ email, password }) => async () => {
         email,
         password
       );
-        Alert.alert(`Wellcome, ${login}`)
+
     } catch (error) {
        const errorCode = error.code;
         const errorMessage = error.message;
@@ -95,6 +95,8 @@ export const logoutUser = () => async (dispatch, getState) => {
     try {
      await signOut(auth);
       dispatch(logout());
+      const state = getState();
+        console.log(state, 'state redux LOGOUT')
     } catch (error) {
        Alert.alert(error.message)
         console.log(error);

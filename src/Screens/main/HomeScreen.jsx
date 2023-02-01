@@ -1,12 +1,17 @@
 import React from 'react';
+import { useDispatch } from "react-redux";
 import { TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { CommentsScreen, PostsScreen, MapScreen } from '../nested';
 import {  Feather} from "@expo/vector-icons";
+import { logoutUser } from '../../redux/auth/authOperations'
+
 
 const NestedStack = createNativeStackNavigator();
 
 const HomeScreen = () => {
+    const dispatch = useDispatch();
+
    return (
     <NestedStack.Navigator
       initialRouteName={PostsScreen}
@@ -27,7 +32,7 @@ const HomeScreen = () => {
           headerRight: () => (
             <TouchableOpacity
               style={{ width: 24, marginRight: 16 }}
-              onPress={()=>{}}
+              onPress={()=>dispatch(logoutUser())}
             >
               <Feather
                 name="log-out"
