@@ -15,7 +15,6 @@ export const PostsScreen = ({ navigation }) => {
    useEffect(() => {
     (async () => {
     const dbRef = collection(db, "posts");
-    console.log(dbRef)
     onSnapshot(dbRef, (docSnap) =>
       setPosts(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
@@ -50,7 +49,8 @@ export const PostsScreen = ({ navigation }) => {
               <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
                 <TouchableOpacity
             onPress={() => navigation.navigate("Map", {
-                  location:item.coords
+              location: item.coords,
+              title:item.description
                 })}
                 activeOpacity={0.8}
                 >
@@ -78,9 +78,9 @@ export const PostsScreen = ({ navigation }) => {
           </View>
         <View style={styles.postsContainer}>
           <FlatList
-            data={posts}
+           data={posts}
            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
+           renderItem={renderItem}
           />
         </View>
         </View>
