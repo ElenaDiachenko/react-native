@@ -5,21 +5,23 @@ import { Ionicons, Feather} from "@expo/vector-icons";
 import * as MediaLibrary from 'expo-media-library';
 import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard, Alert} from 'react-native';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {storage} from '../../firebase/config'
-
+import { collection, addDoc } from "firebase/firestore";
+import {storage, db} from '../../firebase/config'
+import {useAuth} from '../../hooks/useAuth'
 
 const CreatePostsScreen = ({ navigation }) => {
   //  let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
-   const [hasLocationPermission, setHasLocationPermission] = useState(null);
+  const [hasLocationPermission, setHasLocationPermission] = useState(null);
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
   const [photo, setPhoto] = useState();
   const [isKeyboard, setIsKeyboard] = useState(false);
-const [cameraRef, setCameraRef] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
   const [startCamera, setStartCamera] = useState(false);
   const [description, setDescription] = useState('');
-  const [location, setLocation] = useState("")
-
+  const [location, setLocation] = useState("");
+  const [coords, setCoords] = useState(null)
+  const {userId} = useAuth()
 
   useEffect(() => {
     (async () => {
@@ -29,17 +31,15 @@ const [cameraRef, setCameraRef] = useState(null);
       setHasCameraPermission(cameraPermission.status === "granted");
       setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
       setHasLocationPermission(locationPermission.status === 'granted');
-
     })();
   }, []);
 
     if (hasCameraPermission === undefined || hasLocationPermission === undefined) {
-    return <Text>Requesting permissions...</Text>
+      return <Text>Requesting permissions...</Text>
     }else if (!hasLocationPermission ) {
-    return <Text>Permission for location not granted. Please change this in settings.</Text>
+      return <Text>Permission for location not granted. Please change this in settings.</Text>
     } else if (!hasCameraPermission) {
-      
-    return <Text>Permission for camera not granted. Please change this in settings.</Text>
+     return <Text>Permission for camera not granted. Please change this in settings.</Text>
   }
 
     const keyboardHide = () => {
@@ -47,37 +47,41 @@ const [cameraRef, setCameraRef] = useState(null);
     Keyboard.dismiss();
   };
 
- let takePhoto = async () => {
-   if (cameraRef) {
+  let takePhotoWithLocation = async () => {
+    if (!cameraRef) return;
+  try {
       let options = {
-      // quality: 1,
-      // base64: true,
         exif: true,
         skipProcessing: true,
     };
 
-     const { uri } = await cameraRef.takePictureAsync(options);
+    const { uri } = await cameraRef.takePictureAsync(options);
+    const {coords} = await Location.getCurrentPositionAsync();
+    const address = await Location.reverseGeocodeAsync(coords);
+    console.log(address)
+    const city = address[0].city;
+    const country = address[0].country;
+     setLocation(`${city}, ${country}`);
+     setCoords(coords);
      setPhoto(uri);
-    }
+  
+  } catch (error) {
+    console.log(error)
+  }
   };
 
 
   const uploadPhotoToServer = async () => {
-    if (!photo) {
-      console.log(photo);
-      return
-    };
-
+    if (!photo) return;
     try {
-        const response = await fetch(photo);
-    const file = await response.blob();
-    const fileId = Date.now().toString();
+      const response = await fetch(photo);
+      const file = await response.blob();
+      const fileId = Date.now().toString();
 
-    const storageRef = ref(storage, `images/${fileId}`);
-     await uploadBytes(storageRef, file).then(() => {
-      Alert.alert(`photo is uploaded`);
-    });
-    const photoURL = await getDownloadURL(ref(storage, storageRef));
+      const storageRef = ref(storage, `images/${fileId}`);
+      await uploadBytes(storageRef, file);
+      const photoURL = await getDownloadURL(storageRef);
+      console.log(photoURL)
       return photoURL;
 
     } catch (error) {
@@ -94,13 +98,24 @@ const [cameraRef, setCameraRef] = useState(null);
 
   
   const publishPost = async () => {
-    if (photo) {
-      console.log(photo)
-     
-      const location = await Location.getCurrentPositionAsync();
-     console.log('location', location.coords.latitude, location.coords.longitude)
-
-       navigation.navigate("Posts", { photo });
+    if (photo && coords) {
+      const photoURL = await uploadPhotoToServer();
+      try {
+        
+        const newPost= {
+          photo: photoURL,
+          description,
+          location,
+          coords,
+          userId,
+        }
+        await addDoc(collection(db, "posts"), newPost).then(() => {
+      Alert.alert(`Post was added successfully`);
+    });
+         navigation.navigate("Posts", { photo, coords });
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
@@ -142,7 +157,7 @@ const [cameraRef, setCameraRef] = useState(null);
                   ...styles.photoIcon,
                   backgroundColor: photo ? 'rgba(255, 255, 255, 0.3)' : '#ffffff'
                 }}
-                activeOpacity={0.8} onPress={takePhoto}>
+                activeOpacity={0.8} onPress={takePhotoWithLocation}>
               <Ionicons name="camera-outline" size={24} color={photo ? '#ffffff' : '#BDBDBD'} />
           </TouchableOpacity>
               </Camera>
@@ -188,7 +203,7 @@ const [cameraRef, setCameraRef] = useState(null);
                 />
               </View>
                <TouchableOpacity
-              onPress={uploadPhotoToServer}
+              onPress={publishPost}
               style={{ ...styles.button, backgroundColor: photo ? '#FF6C00' : '#F6F6F6' }}
               activeOpacity={0.8}
             >
