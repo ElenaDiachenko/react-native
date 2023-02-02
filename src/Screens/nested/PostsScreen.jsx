@@ -6,7 +6,6 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { useAuth } from '../../hooks/useAuth';
 
 const defaultAvatar = require('../../../assets/images/avatar.jpg');
-const initPhoto = require('../../../assets/images/forrest.jpg');
 
 export const PostsScreen = ({ navigation }) => {
   const {login,userId,email} = useAuth()
@@ -35,17 +34,30 @@ export const PostsScreen = ({ navigation }) => {
             </View>
 
             <View style={styles.info}>
-              <TouchableOpacity
+        <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+          <TouchableOpacity
                 onPress={() => navigation.navigate("Comments", {
                   postId: item.id,
                   photo:item.photo
                 })}
                 activeOpacity={0.8}
-                style={{ flexDirection: "row", marginRight: 58, alignItems: "flex-end" }}
+                style={{ flexDirection: "row", marginRight: 9, alignItems: "flex-end" }}
               >
                 <EvilIcons name="comment" size={30} color="#BDBDBD" style={{marginRight:6,transform: [{rotateY: '180deg'}]}} />
                 <Text style={styles.commentsCount}>0</Text>
-              </TouchableOpacity>
+          </TouchableOpacity>
+          {/* <TouchableOpacity
+                // onPress={() => navigation.navigate("Comments", {
+                //   postId: item.id,
+                //   photo:item.photo
+                // })}
+                activeOpacity={0.8}
+                style={{ flexDirection: "row", alignItems: "flex-end" }}
+              >
+                <Feather name="thumbs-up" size={24} color="#BDBDBD"  />
+                <Text style={styles.commentsCount}>0</Text>
+              </TouchableOpacity> */}
+              </View>
               <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
                 <TouchableOpacity
             onPress={() => navigation.navigate("Map", {
