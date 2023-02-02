@@ -21,7 +21,7 @@ const CreatePostsScreen = ({ navigation }) => {
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState("");
   const [coords, setCoords] = useState(null)
-  const {userId} = useAuth()
+  const {userId, login} = useAuth()
 
   useEffect(() => {
     (async () => {
@@ -108,11 +108,12 @@ const CreatePostsScreen = ({ navigation }) => {
           location,
           coords,
           userId,
+          login
         }
         await addDoc(collection(db, "posts"), newPost).then(() => {
       Alert.alert(`Post was added successfully`);
     });
-         navigation.navigate("Posts", { photo, coords });
+         navigation.navigate("Posts");
       } catch (error) {
         console.log(error)
       }

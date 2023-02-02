@@ -1,40 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { EvilIcons, Feather } from '@expo/vector-icons';
 import { View, Text, StyleSheet, Image, FlatList ,TouchableOpacity} from 'react-native';
+import { db } from '../../firebase/config';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { useAuth } from '../../hooks/useAuth';
 
 const defaultAvatar = require('../../../assets/images/avatar.jpg');
 const initPhoto = require('../../../assets/images/forrest.jpg');
 
-export const PostsScreen = ({ navigation, route }) => {
+export const PostsScreen = ({ navigation }) => {
+  const {login,userId,email} = useAuth()
   const [posts, setPosts] = useState([]);
 
-  // useEffect(() => {
-  //     setPosts(prev=>[...prev, route.params])
-  //  }, [route.params])
-  
-    return (
-      <View style={styles.container}>
-        <View style={styles.postBox}>
-          <View style={styles.authorBox}>
-            <Image source={defaultAvatar} style={styles.avatarImg} />
-            <View>
-              <Text style={styles.userName}>userName</Text>
-              <Text style={styles.userEmail}>userEmail</Text>
-            </View>
-          </View>
+   useEffect(() => {
+    (async () => {
+    const dbRef = collection(db, "posts");
+    console.log(dbRef)
+    onSnapshot(dbRef, (docSnap) =>
+      setPosts(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+  })();
+  }, []);
 
-          <View style={styles.contentBox}>
+  
+  const renderItem = ({ item }) => (
+    <View style={styles.contentBox}>
              <Image
-              source={posts.length ? posts[0] : initPhoto}
+              source={{uri:item.photo}}
               style={{ height: 240, borderRadius: 8, marginBottom:8 }}
             />
-            <Text style={styles.description}>
-            Forrest
+      <View>
+        <Text style={styles.description}>
+            {item.description}
             </Text>
+            </View>
 
             <View style={styles.info}>
               <TouchableOpacity
-                onPress={() => navigation.navigate("Comments")}
+                onPress={() => navigation.navigate("Comments", {
+                  postId: item.id,
+                  photo:item.photo
+                })}
                 activeOpacity={0.8}
                 style={{ flexDirection: "row", marginRight: 58, alignItems: "flex-end" }}
               >
@@ -43,7 +49,9 @@ export const PostsScreen = ({ navigation, route }) => {
               </TouchableOpacity>
               <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
                 <TouchableOpacity
-                onPress={() => navigation.navigate("Map")}
+            onPress={() => navigation.navigate("Map", {
+                  location:item.coords
+                })}
                 activeOpacity={0.8}
                 >
                 <Feather
@@ -53,12 +61,28 @@ export const PostsScreen = ({ navigation, route }) => {
                   style={{marginRight:6}}
                   /> 
                   </TouchableOpacity>
-                <Text style={styles.location}>Location gfhjkhjghg</Text>
+                <Text style={styles.location}>{item.location}</Text>
               </View>
             </View>
           </View>
+  )
+    return (
+      <View style={styles.container}>
+       
+          <View style={styles.authorBox}>
+            <Image source={defaultAvatar} style={styles.avatarImg} />
+            <View>
+            <Text style={styles.userName}>{login}</Text>
+            <Text style={styles.userEmail}>{email}</Text>
+            </View>
+          </View>
+        <View style={styles.postsContainer}>
+          <FlatList
+            data={posts}
+           keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+          />
         </View>
-         
         </View>
   )
 }
@@ -71,7 +95,10 @@ const styles = StyleSheet.create({
     alignItems:"center",
     backgroundColor: "#ffffff",
   },
-  postBox:{},
+  postsContainer: {
+    width: "100%",
+    marginBottom: 120,
+  },
   authorBox: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -98,6 +125,7 @@ const styles = StyleSheet.create({
     color: '#21212180'
   },
   contentBox: {
+    marginBottom: 32,
   },
  
   description: {
@@ -110,7 +138,7 @@ const styles = StyleSheet.create({
   info: {
     flexDirection: "row",
     alignItems: "center",
-    marginRight: "auto",
+    justifyContent: "space-between",
   },
   commentsCount: {
     color: "#BDBDBD",
