@@ -43,13 +43,10 @@ const RegistrationScreen = ({ navigation }) => {
             email,
             password
         }
-         console.log(credentials);
+         
         await dispatch(registerUser(credentials))
-        // reset()
+        reset()
     }
-     const showHidePwd = () => {
-    setShowPwd(!showPwd);
-  }
 
   
     return (

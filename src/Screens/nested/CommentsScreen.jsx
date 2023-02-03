@@ -92,7 +92,7 @@ export const CommentsScreen = ({ route }) => {
     return (
       <View style={{
       marginBottom: 24,
-      flexDirection: currentUser ? 'row-reverse' : 'row',
+      flexDirection: !currentUser ? 'row-reverse' : 'row',
     }}
       onStartShouldSetResponder={() => true}>
       <View>
@@ -101,15 +101,15 @@ export const CommentsScreen = ({ route }) => {
       
         <View style={{
           ...styles.comment,
-          marginRight: currentUser ? 10 : 0,
-          marginLeft: currentUser ? 0 : 10,
-          borderTopLeftRadius: currentUser ? 6 : 0,
-          borderTopRightRadius: currentUser ? 0 : 6,
+          marginRight: currentUser ? 0 : 10,
+          marginLeft: currentUser ? 10 : 0,
+          borderTopLeftRadius: currentUser ? 0 : 6,
+          borderTopRightRadius: currentUser ? 6 : 0,
         }}>
         <Text style={{ lineHeight: 18, fontSize: 13, color: "#212121" }}>{item.comment}</Text>
           <Text style={{
             ...styles.date,
-          textAlign: currentUser ? 'left' : 'right',
+          textAlign: !currentUser ? 'left' : 'right',
           }}>
           {item.date} | {item.time}
         </Text>
@@ -129,12 +129,11 @@ export const CommentsScreen = ({ route }) => {
           style={styles.preview}
         /> 
         <View style={{flex:1, flexGrow :1, marginTop:24}}>
-          <FlatList
+            <FlatList
           data={comments}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-        />
-
+            />
           {/* <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           > */}

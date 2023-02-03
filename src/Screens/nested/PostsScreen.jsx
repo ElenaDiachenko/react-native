@@ -46,7 +46,7 @@ export const PostsScreen = ({ navigation }) => {
                 <EvilIcons name="comment" size={30} color="#BDBDBD" style={{marginRight:6, color: !item.commentsCount  ? '#BDBDBD' : '#FF6C00',transform: [{rotateY: '180deg'}]}} />
             <Text style={styles.commentsCount}>{item.commentsCount || 0}</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity
+          <TouchableOpacity
                 // onPress={() => navigation.navigate("Comments", {
                 //   postId: item.id,
                 //   photo:item.photo
@@ -56,7 +56,7 @@ export const PostsScreen = ({ navigation }) => {
               >
                 <Feather name="thumbs-up" size={24} color="#BDBDBD"  />
                 <Text style={styles.commentsCount}>0</Text>
-              </TouchableOpacity> */}
+              </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
                 <TouchableOpacity
@@ -69,7 +69,7 @@ export const PostsScreen = ({ navigation }) => {
                 <Feather
                   name="map-pin"
                   size={24}
-                  style={{marginRight:6, color: !item.commentsCount  ? '#BDBDBD' : '#FF6C00'}}
+                  style={{marginRight:6, color: '#BDBDBD' }}
                   /> 
                   </TouchableOpacity>
                 <Text style={styles.location}>{item.location}</Text>
