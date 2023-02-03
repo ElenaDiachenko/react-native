@@ -15,6 +15,7 @@ const Home = () => {
       initialRouteName={HomeScreen}
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
+        tabBarHideOnKeyboard:true,
         tabBarStyle: {
           backgroundColor: "#ffffff",
           shadowColor: "#000000",

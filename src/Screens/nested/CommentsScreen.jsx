@@ -97,11 +97,9 @@ console.log(comments, `LENGTH ${comments.length}`);
       <Image source={defaultAvatar} style={styles.avatarImg} />
       <View style={styles.comment}>
         <Text style={{ lineHeight: 18, fontSize: 13, color: "#212121" }}>{item.comment}</Text>
-        <View>
           <Text style={styles.date}>
             {item.date} | {item.time}
           </Text>
-        </View>
       </View>
              
     {/* </View> */}
@@ -195,7 +193,8 @@ const styles = StyleSheet.create({
     borderColor: '#E8E8E8',
     borderRadius: 100,
     borderWidth: 1,
-     marginTop: 32
+    marginTop: 32,
+     marginBottom:25
   },
   
   input: {

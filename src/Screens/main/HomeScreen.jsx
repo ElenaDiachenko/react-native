@@ -17,7 +17,7 @@ const HomeScreen = () => {
       initialRouteName={PostsScreen}
       screenOptions={{
         headerTitleAlign: 'center',
-        headerTitleStyle: {
+          headerTitleStyle: {
           color: "#212121",
           fontFamily: "Roboto-Regular",
           fontSize: 24,
