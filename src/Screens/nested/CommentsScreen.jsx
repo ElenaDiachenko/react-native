@@ -13,7 +13,7 @@ import {
   FlatList,
   Alert,
 } from "react-native";
-import { doc, onSnapshot, addDoc,collection } from 'firebase/firestore';
+import { doc, onSnapshot, addDoc,collection, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from "../../hooks/useAuth";
 const defaultAvatar = require('../../../assets/images/avatar.jpg');
@@ -22,59 +22,63 @@ import { AntDesign } from '@expo/vector-icons';
 
 export const CommentsScreen = ({ route }) => {
   const { postId, photo } = route.params;
-  const { login, email, userId } = useAuth();
+  const { login, userId } = useAuth();
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [isKeyboard, setIsKeyboard] = useState(false);
   const [loading, setLoading] = useState(false);
+   const [focusCommentInput, setFocusCommentInput] = useState(false);
 
-   useEffect(() => {
+  useEffect(() => {
     (async () => {
       try {
-      setLoading(true)
-      const dbRef = doc(db, "posts", postId);
-      onSnapshot(collection(dbRef, "comments"), (docSnap) =>
-        setComments(docSnap.docs.map((doc) =>  ({ ...doc.data(), id: doc.id })))
-      );
+        setLoading(true)
+        const dbRef = doc(db, "posts", postId);
+        onSnapshot(collection(dbRef, "comments"), (docSnap) =>
+          setComments(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+        );
         setLoading(false)
-    } catch (error) {
-        console.log(error)
+      } catch (error) {
         setLoading(false)
-    }
-  })();
+      }
+    })();
   }, []);
 
-console.log(comments, `LENGTH ${comments.length}`);
   const createComment = async () => {
-    if (!comment) {
+    if (!comment.trim()) {
       Alert.alert(`Please, add comment.`);
       return
     };
     const date = new Date().toLocaleDateString();
     const time = new Date().toLocaleTimeString();
     
-    try { 
-       const docRef = doc(db, 'posts', postId)
-     await addDoc(collection(docRef, "comments"), {
+    try {
+      const docRef = doc(db, 'posts', postId)
+      await addDoc(collection(docRef, "comments"), {
         comment,
+        userId,
         login,
         date,
         time,
-     });
+      });
+      await setDoc(docRef, {
+        commentsCount:comments.length+1
+      }, { merge: true })
       setComment("");
+      keyboardHide()
     } catch (error) {
       console.log(error)
     }
-   };
+  };
 
 
- const onFocusCommentInput = () => {
+  const onFocusCommentInput = () => {
     setIsKeyboard(true);
-    // setFocusCommentInput(true);
+    setFocusCommentInput(true);
   }
   const onBlurCommentInput = () => {
     setIsKeyboard(false);
-    // setFocusCommentInput(false);
+    setFocusCommentInput(false);
   }
 
   const keyboardHide = () => {
@@ -82,29 +86,38 @@ console.log(comments, `LENGTH ${comments.length}`);
     Keyboard.dismiss();
   };
 
-  const renderItem = ({ item }) => (
-    <View style={{
+  const renderItem = ({ item }) => {
+    const currentUser = userId === item.userId;
+
+    return (
+      <View style={{
       marginBottom: 24,
-      flexDirection: "row",
+      flexDirection: currentUser ? 'row-reverse' : 'row',
     }}
-     onStartShouldSetResponder={() => true}>
-      {/* <View
-      style={{
-        flexDirection: "row",
-        // justifyContent: "flex-start",
-      }}
-    > */}
-      <Image source={defaultAvatar} style={styles.avatarImg} />
-      <View style={styles.comment}>
+      onStartShouldSetResponder={() => true}>
+      <View>
+        <Image source={defaultAvatar} style={styles.avatarImg} />
+      </View>
+      
+        <View style={{
+          ...styles.comment,
+          marginRight: currentUser ? 10 : 0,
+          marginLeft: currentUser ? 0 : 10,
+          borderTopLeftRadius: currentUser ? 6 : 0,
+          borderTopRightRadius: currentUser ? 0 : 6,
+        }}>
         <Text style={{ lineHeight: 18, fontSize: 13, color: "#212121" }}>{item.comment}</Text>
-          <Text style={styles.date}>
-            {item.date} | {item.time}
-          </Text>
+          <Text style={{
+            ...styles.date,
+          textAlign: currentUser ? 'left' : 'right',
+          }}>
+          {item.date} | {item.time}
+        </Text>
       </View>
              
-    {/* </View> */}
     </View>
-  );
+   )
+};
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -115,7 +128,7 @@ console.log(comments, `LENGTH ${comments.length}`);
           source={{ uri: photo }}
           style={styles.preview}
         /> 
-        <View style={{flex:1, flexGrow :1, marginTop:32}}>
+        <View style={{flex:1, flexGrow :1, marginTop:24}}>
           <FlatList
           data={comments}
           keyExtractor={(item) => item.id}
@@ -164,7 +177,7 @@ const styles = StyleSheet.create({
     height: 240,
     borderRadius: 8,
     width: "100%",
-    marginTop: 32,
+    marginTop: 24,
   },
    avatarImg: {
     borderRadius: 16,
@@ -172,29 +185,30 @@ const styles = StyleSheet.create({
     height: 38,
   },
   comment: {
-    marginLeft: 16,
-   flexGrow:1,
     borderWidth: 1,
+    flex:1,
+    // width: 'calc(100% - 44px)',
     padding:16,
-    borderRadius: 8,
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
     borderColor: "rgba(0, 0, 0, 0.03)",
     backgroundColor: "rgba(0, 0, 0, 0.03)",
   },
   date: {
     fontSize: 10,
     lineHeight: 12,
-    textAlign: "right",
     color: "#BDBDBD",
   },
   form: {
-     position:"relative",
+    position:"relative",
     justifyContent: 'center',
     backgroundColor: '#F6F6F6',
     borderColor: '#E8E8E8',
     borderRadius: 100,
     borderWidth: 1,
-    marginTop: 32,
-     marginBottom:25
+    marginTop: 24,
+    marginBottom: 24
+     
   },
   
   input: {
@@ -203,7 +217,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 20,
-    minHeight:50
+    minHeight: 50, 
   },
     button: {
     position: 'absolute',

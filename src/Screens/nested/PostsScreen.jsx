@@ -43,8 +43,8 @@ export const PostsScreen = ({ navigation }) => {
                 activeOpacity={0.8}
                 style={{ flexDirection: "row", marginRight: 9, alignItems: "flex-end" }}
               >
-                <EvilIcons name="comment" size={30} color="#BDBDBD" style={{marginRight:6,transform: [{rotateY: '180deg'}]}} />
-                <Text style={styles.commentsCount}>0</Text>
+                <EvilIcons name="comment" size={30} color="#BDBDBD" style={{marginRight:6, color: !item.commentsCount  ? '#BDBDBD' : '#FF6C00',transform: [{rotateY: '180deg'}]}} />
+            <Text style={styles.commentsCount}>{item.commentsCount || 0}</Text>
           </TouchableOpacity>
           {/* <TouchableOpacity
                 // onPress={() => navigation.navigate("Comments", {
@@ -69,8 +69,7 @@ export const PostsScreen = ({ navigation }) => {
                 <Feather
                   name="map-pin"
                   size={24}
-                  color="#BDBDBD"
-                  style={{marginRight:6}}
+                  style={{marginRight:6, color: !item.commentsCount  ? '#BDBDBD' : '#FF6C00'}}
                   /> 
                   </TouchableOpacity>
                 <Text style={styles.location}>{item.location}</Text>
