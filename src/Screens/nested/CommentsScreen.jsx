@@ -22,26 +22,29 @@ import { AntDesign } from '@expo/vector-icons';
 
 export const CommentsScreen = ({ route }) => {
   const { postId, photo } = route.params;
-  const { login } = useAuth();
+  const { login, email, userId } = useAuth();
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [isKeyboard, setIsKeyboard] = useState(false);
-  
+  const [loading, setLoading] = useState(false);
+
    useEffect(() => {
     (async () => {
-    try {
+      try {
+      setLoading(true)
       const dbRef = doc(db, "posts", postId);
       onSnapshot(collection(dbRef, "comments"), (docSnap) =>
-        setComments(docSnap.docs.map((doc) =>  ({ ...doc.data()})))
+        setComments(docSnap.docs.map((doc) =>  ({ ...doc.data(), id: doc.id })))
       );
-      console.log(comments)
+        setLoading(false)
     } catch (error) {
-      console.log(error)
+        console.log(error)
+        setLoading(false)
     }
   })();
   }, []);
 
-
+console.log(comments, `LENGTH ${comments.length}`);
   const createComment = async () => {
     if (!comment) {
       Alert.alert(`Please, add comment.`);
@@ -79,6 +82,31 @@ export const CommentsScreen = ({ route }) => {
     Keyboard.dismiss();
   };
 
+  const renderItem = ({ item }) => (
+    <View style={{
+      marginBottom: 24,
+      flexDirection: "row",
+    }}
+     onStartShouldSetResponder={() => true}>
+      {/* <View
+      style={{
+        flexDirection: "row",
+        // justifyContent: "flex-start",
+      }}
+    > */}
+      <Image source={defaultAvatar} style={styles.avatarImg} />
+      <View style={styles.comment}>
+        <Text style={{ lineHeight: 18, fontSize: 13, color: "#212121" }}>{item.comment}</Text>
+        <View>
+          <Text style={styles.date}>
+            {item.date} | {item.time}
+          </Text>
+        </View>
+      </View>
+             
+    {/* </View> */}
+    </View>
+  );
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -89,36 +117,16 @@ export const CommentsScreen = ({ route }) => {
           source={{ uri: photo }}
           style={styles.preview}
         /> 
-        <View>
+        <View style={{flex:1, flexGrow :1, marginTop:32}}>
+          <FlatList
+          data={comments}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+        />
 
-          {/* comment */}
-          
-          
-            <View
-          style={{
-          marginTop: 32,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems:"flex-start"
-          }}
-          >
-            <Image source={defaultAvatar} style={styles.avatarImg} />
-              <View style={styles.comment}>
-                <Text style={{lineHeight: 18, fontSize:13, color:"#212121"}}>Comment</Text>
-                <View>
-                  <Text style={styles.date}>
-                  03.05.2022
-                  </Text>
-                </View>
-              </View>
-             
-            </View>
-            
-          
-          {/* comment */}
-          <KeyboardAvoidingView
+          {/* <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
+          > */}
             <View style={styles.form} >
               <TextInput
                 value={comment}
@@ -139,7 +147,7 @@ export const CommentsScreen = ({ route }) => {
                 <AntDesign name='arrowup' size={20} color='#ffffff' />
               </TouchableOpacity>
             </View>
-          </KeyboardAvoidingView>
+          {/* </KeyboardAvoidingView> */}
         </View>
       </View>
       </TouchableWithoutFeedback>
@@ -167,7 +175,7 @@ const styles = StyleSheet.create({
   },
   comment: {
     marginLeft: 16,
-    flexGrow:1,
+   flexGrow:1,
     borderWidth: 1,
     padding:16,
     borderRadius: 8,
@@ -180,7 +188,8 @@ const styles = StyleSheet.create({
     textAlign: "right",
     color: "#BDBDBD",
   },
-   form: {
+  form: {
+     position:"relative",
     justifyContent: 'center',
     backgroundColor: '#F6F6F6',
     borderColor: '#E8E8E8',
