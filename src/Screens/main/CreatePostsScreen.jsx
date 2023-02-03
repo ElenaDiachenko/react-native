@@ -108,7 +108,8 @@ const CreatePostsScreen = ({ navigation }) => {
           location,
           coords,
           userId,
-          login
+          login,
+          comments:[]
         }
         await addDoc(collection(db, "posts"), newPost).then(() => {
       Alert.alert(`Post was added successfully`);

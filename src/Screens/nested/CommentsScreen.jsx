@@ -13,9 +13,12 @@ import {
   FlatList,
   Alert,
 } from "react-native";
+import { doc, onSnapshot, addDoc,collection } from 'firebase/firestore';
+import { db } from '../../firebase/config';
 import { useAuth } from "../../hooks/useAuth";
 const defaultAvatar = require('../../../assets/images/avatar.jpg');
 import { AntDesign } from '@expo/vector-icons';
+
 
 export const CommentsScreen = ({ route }) => {
   const { postId, photo } = route.params;
@@ -24,6 +27,44 @@ export const CommentsScreen = ({ route }) => {
   const [comments, setComments] = useState([]);
   const [isKeyboard, setIsKeyboard] = useState(false);
   
+   useEffect(() => {
+    (async () => {
+    try {
+      const dbRef = doc(db, "posts", postId);
+      onSnapshot(collection(dbRef, "comments"), (docSnap) =>
+        setComments(docSnap.docs.map((doc) =>  ({ ...doc.data()})))
+      );
+      console.log(comments)
+    } catch (error) {
+      console.log(error)
+    }
+  })();
+  }, []);
+
+
+  const createComment = async () => {
+    if (!comment) {
+      Alert.alert(`Please, add comment.`);
+      return
+    };
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString();
+    
+    try { 
+       const docRef = doc(db, 'posts', postId)
+     await addDoc(collection(docRef, "comments"), {
+        comment,
+        login,
+        date,
+        time,
+     });
+      setComment("");
+    } catch (error) {
+      console.log(error)
+    }
+   };
+
+
  const onFocusCommentInput = () => {
     setIsKeyboard(true);
     // setFocusCommentInput(true);
@@ -52,7 +93,8 @@ export const CommentsScreen = ({ route }) => {
 
           {/* comment */}
           
-          <View
+          
+            <View
           style={{
           marginTop: 32,
           flexDirection: "row",
@@ -70,7 +112,9 @@ export const CommentsScreen = ({ route }) => {
                 </View>
               </View>
              
-          </View>
+            </View>
+            
+          
           {/* comment */}
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -88,8 +132,8 @@ export const CommentsScreen = ({ route }) => {
               />
 
               <TouchableOpacity
-                onPress={() => { }}
-                 style={styles.button}
+                onPress={createComment}
+                style={styles.button}
                 activeOpacity={0.8}
               >
                 <AntDesign name='arrowup' size={20} color='#ffffff' />
@@ -123,7 +167,6 @@ const styles = StyleSheet.create({
   },
   comment: {
     marginLeft: 16,
-    marginBottom: 24,
     flexGrow:1,
     borderWidth: 1,
     padding:16,
@@ -143,14 +186,16 @@ const styles = StyleSheet.create({
     borderColor: '#E8E8E8',
     borderRadius: 100,
     borderWidth: 1,
-    padding: 16,
+     marginTop: 32
   },
   
   input: {
     marginRight: 40,
+    paddingHorizontal: 16,
     fontFamily: "Roboto-Regular",
     fontSize: 16,
-    lineHeight:20
+    lineHeight: 20,
+    minHeight:50
   },
     button: {
     position: 'absolute',
