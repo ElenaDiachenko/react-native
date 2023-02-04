@@ -3,27 +3,28 @@ import { Camera } from 'expo-camera';
 import * as Location from 'expo-location';
 import { Ionicons, Feather} from "@expo/vector-icons";
 import * as MediaLibrary from 'expo-media-library';
+import * as ImagePicker from "expo-image-picker";
 import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard, Alert} from 'react-native';
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
-import {storage, db} from '../../firebase/config'
+import { db} from '../../firebase/config'
 import {useAuth} from '../../hooks/useAuth'
 import { uploadPhotoToServer } from '../../utils/uploadPhotoToServer';
-
+import { getLocation } from '../../utils/getLocation';
 
 const CreatePostsScreen = ({ navigation }) => {
   //  let cameraRef = useRef();
+  
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasLocationPermission, setHasLocationPermission] = useState(null);
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
-  const [photo, setPhoto] = useState();
+  const [photo, setPhoto] = useState('');
   const [isKeyboard, setIsKeyboard] = useState(false);
   const [cameraRef, setCameraRef] = useState(null);
   const [startCamera, setStartCamera] = useState(false);
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState("");
   const [coords, setCoords] = useState(null)
-  const {userId, login} = useAuth()
+  const { userId, login } = useAuth()
 
   useEffect(() => {
     (async () => {
@@ -49,6 +50,25 @@ const CreatePostsScreen = ({ navigation }) => {
     Keyboard.dismiss();
   };
 
+    const takePhotoWithLocationFromGallery = async () => {
+      try {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+        if(result.canceled)return
+      const {coords,city,country} = await getLocation()
+       setLocation(`${city}, ${country}`);
+        setCoords(coords);
+        setPhoto(result.assets[0].uri);
+      } catch (error) {
+        console.log(error)
+      }
+  };
+  
+
   let takePhotoWithLocation = async () => {
     if (!cameraRef) return;
   try {
@@ -58,10 +78,7 @@ const CreatePostsScreen = ({ navigation }) => {
     };
 
     const { uri } = await cameraRef.takePictureAsync(options);
-    const {coords} = await Location.getCurrentPositionAsync();
-    const address = await Location.reverseGeocodeAsync(coords);
-    const city = address[0].city;
-    const country = address[0].country;
+    const {coords,city,country} = await getLocation()
      setLocation(`${city}, ${country}`);
      setCoords(coords);
      setPhoto(uri);
@@ -71,6 +88,11 @@ const CreatePostsScreen = ({ navigation }) => {
   }
   };
 
+  const reset = () => {
+    setDescription('');
+    setLocation("");
+    setPhoto('')
+  }
   
   const publishPost = async () => {
     if (photo && coords) {
@@ -88,8 +110,9 @@ const CreatePostsScreen = ({ navigation }) => {
         }
         await addDoc(collection(db, "posts"), newPost).then(() => {
       Alert.alert(`Post was added successfully`);
-    });
-         navigation.navigate("Posts");
+        });
+        reset()
+        navigation.navigate("Posts");
       } catch (error) {
         console.log(error)
       }
@@ -139,7 +162,7 @@ const CreatePostsScreen = ({ navigation }) => {
           </TouchableOpacity>
               </Camera>
                {!photo?(<TouchableOpacity
-                onPress={()=>{}}
+                onPress={takePhotoWithLocationFromGallery}
                 activeOpacity={0.8}
               >
                 <Text style={styles.uploadEditButton}>

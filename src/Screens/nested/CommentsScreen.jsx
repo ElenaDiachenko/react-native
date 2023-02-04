@@ -22,7 +22,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 export const CommentsScreen = ({ route }) => {
   const { postId, photo } = route.params;
-  const { login, userId } = useAuth();
+  const { login, userId, avatar } = useAuth();
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [isKeyboard, setIsKeyboard] = useState(false);
@@ -96,7 +96,9 @@ export const CommentsScreen = ({ route }) => {
     }}
       onStartShouldSetResponder={() => true}>
       <View>
-        <Image source={defaultAvatar} style={styles.avatarImg} />
+          {avatar
+            ? <Image source={{ uri: avatar }} style={styles.avatarImg} />
+            : <Image source={defaultAvatar} style={styles.avatarImg} />}
       </View>
       
         <View style={{

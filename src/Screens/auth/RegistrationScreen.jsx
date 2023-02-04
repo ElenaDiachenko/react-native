@@ -39,6 +39,7 @@ const RegistrationScreen = ({ navigation }) => {
         setEmail("");
         setPassword("");
         setLogin("");
+        setAvatar("")
     }
 
     const pickImage = async () => {
@@ -53,9 +54,6 @@ const RegistrationScreen = ({ navigation }) => {
         }
   };
   
-console.log(avatar)
-
-
     const onSubmit = async() => {
         keyboardHide();
         const photoURL = await uploadPhotoToServer(avatar, 'avatars');
