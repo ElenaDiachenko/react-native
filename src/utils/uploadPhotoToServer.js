@@ -11,7 +11,6 @@ export const uploadPhotoToServer =async (photo, path)=> {
       const storageRef = ref(storage, `${path}/${fileId}`);
       await uploadBytes(storageRef, file);
       const photoURL = await getDownloadURL(storageRef);
-      console.log(photoURL)
       return photoURL;
 
     } catch (error) {

@@ -3,7 +3,8 @@ import {
     selectUserId,
     selectLogin,
     selectEmail,
-    selectAuthStatus
+    selectAuthStatus,
+    selectAvatar
 } from '../redux/auth/selectors'
 
 export const useAuth = () => {
@@ -11,6 +12,7 @@ export const useAuth = () => {
         userId: useSelector(selectUserId),
         login: useSelector(selectLogin),
         email: useSelector(selectEmail),
-        authStatus: useSelector(selectAuthStatus)
+        authStatus: useSelector(selectAuthStatus),
+        avatar: useSelector(selectAvatar)
     }
 }

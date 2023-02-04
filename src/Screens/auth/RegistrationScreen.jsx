@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import {registerUser} from '../../redux/auth/authOperations'
+import * as ImagePicker from "expo-image-picker";
 import {
     StyleSheet,
     View,
@@ -11,12 +11,16 @@ import {
     Keyboard,
     Text,    
 } from 'react-native';
+import {registerUser} from '../../redux/auth/authOperations'
+import { uploadPhotoToServer } from '../../utils/uploadPhotoToServer';
+
 const image = require('../../../assets/images/auth-bg.jpg')
 import {Input, Title, Button, Avatar,LinkAuth} from '../../components'
 
 const RegistrationScreen = ({ navigation }) => {
     const dispatch = useDispatch();
 
+    const [avatar,setAvatar] = useState("")
     const [login, setLogin] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -30,21 +34,39 @@ const RegistrationScreen = ({ navigation }) => {
         Keyboard.dismiss()
     }
     
+
       const reset = () => {
         setEmail("");
         setPassword("");
         setLogin("");
     }
 
+    const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+        if (!result.canceled) {
+            setAvatar(result.assets[0].uri);
+        }
+  };
+  
+console.log(avatar)
+
+
     const onSubmit = async() => {
         keyboardHide();
+        const photoURL = await uploadPhotoToServer(avatar, 'avatars');
         const credentials = {
             login, 
             email,
-            password
+            password,
+            avatar:photoURL
         }
          
-        await dispatch(registerUser(credentials))
+       dispatch(registerUser(credentials))
         reset()
     }
 
@@ -55,7 +77,7 @@ const RegistrationScreen = ({ navigation }) => {
         <ImageBackground source={image}  style={styles.imageBg}>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
                 <View style={styles.container}>
-                    <Avatar/>
+                    <Avatar uri={avatar } pickImage={pickImage}  />
                     <View style={styles.form}>
                         <Title text="Регистрация" />
                         <Input value={login}
@@ -78,7 +100,7 @@ const RegistrationScreen = ({ navigation }) => {
                         />
                         {password ? <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>:null}
                          </View>           
-                        <Button text='Зарегистрироваться' onPress={onSubmit} />
+                        <Button text='Зарегистрироваться' onPress={onSubmit } />
                         <LinkAuth title='Уже есть аккаунт? Войти' navigate={navigate} />
                     </View>
                 </View>

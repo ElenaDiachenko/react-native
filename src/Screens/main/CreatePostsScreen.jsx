@@ -60,7 +60,6 @@ const CreatePostsScreen = ({ navigation }) => {
     const { uri } = await cameraRef.takePictureAsync(options);
     const {coords} = await Location.getCurrentPositionAsync();
     const address = await Location.reverseGeocodeAsync(coords);
-    console.log(address)
     const city = address[0].city;
     const country = address[0].country;
      setLocation(`${city}, ${country}`);

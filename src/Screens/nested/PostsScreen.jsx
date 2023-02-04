@@ -8,9 +8,9 @@ import { useAuth } from '../../hooks/useAuth';
 const defaultAvatar = require('../../../assets/images/avatar.jpg');
 
 export const PostsScreen = ({ navigation }) => {
-  const {login,userId,email} = useAuth()
+  const {login,avatar,email} = useAuth()
   const [posts, setPosts] = useState([]);
-
+ console.log(avatar)
    useEffect(() => {
     (async () => {
     const dbRef = collection(db, "posts");
@@ -81,7 +81,7 @@ export const PostsScreen = ({ navigation }) => {
       <View style={styles.container}>
        
           <View style={styles.authorBox}>
-            <Image source={defaultAvatar} style={styles.avatarImg} />
+           {avatar ?  <Image source={{uri:avatar}} style={styles.avatarImg} /> :  <Image source={defaultAvatar} style={styles.avatarImg} />}
             <View>
             <Text style={styles.userName}>{login}</Text>
             <Text style={styles.userEmail}>{email}</Text>
