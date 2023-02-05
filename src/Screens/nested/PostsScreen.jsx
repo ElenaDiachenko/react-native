@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { EvilIcons, Feather } from '@expo/vector-icons';
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
-import { doc, onSnapshot, addDoc,collection,arrayRemove, setDoc,arrayUnion, getDoc, query, orderBy, where } from 'firebase/firestore';
+import { doc, onSnapshot, collection,arrayRemove, setDoc,arrayUnion, getDoc, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -13,10 +13,11 @@ export const PostsScreen = ({ navigation }) => {
 
   useEffect(() => {
     (async () => {
-    const dbRef = collection(db, "posts");
-    onSnapshot(dbRef, (docSnap) =>{
-      setPosts(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))}
-    );
+    const q = query(collection(db, 'posts'), orderBy('date', 'desc'));
+    
+    onSnapshot(q, (querySnapshot) => {
+      setPosts(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, })))
+    })
   })();
   }, []);
 
