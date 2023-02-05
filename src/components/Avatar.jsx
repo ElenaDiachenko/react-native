@@ -5,7 +5,6 @@ import {
     TouchableOpacity
 } from 'react-native';
 const plus = require("../../assets/images/add.png");
-const avatar = require("../../assets/images/avatar.jpg");
 
 export const Avatar = ({uri, pickImage}) => {
   return (

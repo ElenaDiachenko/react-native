@@ -16,7 +16,7 @@ import {
 import { doc, onSnapshot, addDoc,collection, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from "../../hooks/useAuth";
-const defaultAvatar = require('../../../assets/images/avatar.jpg');
+const defaultAvatar = require('../../../assets/images/avatar.png');
 import { AntDesign } from '@expo/vector-icons';
 
 

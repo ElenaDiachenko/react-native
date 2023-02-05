@@ -1,6 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons} from "@expo/vector-icons";
+import { Ionicons, Feather} from "@expo/vector-icons";
+import { logoutUser } from '../../redux/auth/authOperations'
+import { useDispatch } from "react-redux";
+import { TouchableOpacity } from 'react-native';
 
 import HomeScreen from './HomeScreen'
 import CreatePostsScreen from './CreatePostsScreen'
@@ -9,7 +12,7 @@ import ProfileScreen from './ProfileScreen'
 const MainTab = createBottomTabNavigator();
 
 const Home = () => {
-  
+  const dispatch = useDispatch()
   return (
     <MainTab.Navigator
       initialRouteName={HomeScreen}
@@ -74,7 +77,20 @@ const Home = () => {
           <MainTab.Screen name="Profile"
           component={ProfileScreen}
           options={{ 
-            headerTitle: "Профиль" }}/>
+          headerTitle: "Профиль",
+          headerRight: () => (
+            <TouchableOpacity
+              style={{ width: 24, marginRight: 16 }}
+              onPress={()=>dispatch(logoutUser())}
+            >
+              <Feather
+                name="log-out"
+                size={24}
+                color="#BDBDBD"
+              />
+            </TouchableOpacity>
+          ),
+        }} />
         </MainTab.Navigator>
   )
 }

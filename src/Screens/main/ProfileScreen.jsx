@@ -7,10 +7,9 @@ import { useAuth } from '../../hooks/useAuth';
 import {Avatar} from '../../components'
 
 const image = require('../../../assets/images/auth-bg.jpg')
-const defaultAvatar = require('../../../assets/images/avatar.jpg');
 
  const ProfileScreen  = ({ navigation }) => {
-  const {login,avatar,email, userId} = useAuth()
+  const {login,avatar, userId} = useAuth()
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {

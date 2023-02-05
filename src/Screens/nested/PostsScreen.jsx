@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react
 import { doc, onSnapshot, collection,arrayRemove, setDoc,arrayUnion, getDoc, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../hooks/useAuth';
-const defaultAvatar = require('../../../assets/images/avatar.jpg');
+const defaultAvatar = require('../../../assets/images/avatar.png');
 
 export const PostsScreen = ({ navigation }) => {
   const {login,avatar,email, userId} = useAuth()
