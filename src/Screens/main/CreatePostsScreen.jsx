@@ -3,13 +3,13 @@ import { Camera } from 'expo-camera';
 import * as Location from 'expo-location';
 import { Ionicons, Feather} from "@expo/vector-icons";
 import * as MediaLibrary from 'expo-media-library';
-import * as ImagePicker from "expo-image-picker";
 import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard, Alert} from 'react-native';
 import { collection, addDoc } from "firebase/firestore";
 import { db} from '../../firebase/config'
 import {useAuth} from '../../hooks/useAuth'
 import { uploadPhotoToServer } from '../../utils/uploadPhotoToServer';
 import { getLocation } from '../../utils/getLocation';
+import { pickImage } from '../../utils/pickImage';
 
 const CreatePostsScreen = ({ navigation }) => {
   //  let cameraRef = useRef();
@@ -52,17 +52,12 @@ const CreatePostsScreen = ({ navigation }) => {
 
     const takePhotoWithLocationFromGallery = async () => {
       try {
-        let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
-        });
-        if (result.canceled) return;
+
+        const imagePath = await pickImage();
       const {coords,city,country} = await getLocation()
        setLocation(`${city}, ${country}`);
         setCoords(coords);
-        setPhoto(result.assets[0].uri);
+        setPhoto(imagePath);
       } catch (error) {
         console.log(error)
       }

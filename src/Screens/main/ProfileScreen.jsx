@@ -3,8 +3,11 @@ import { View, Text, StyleSheet,  FlatList,  ImageBackground } from 'react-nativ
 import {  onSnapshot, collection, query, orderBy, where } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../hooks/useAuth';
+import { pickImage } from '../../utils/pickImage';
 import { Avatar,ProfileScreenItem } from '../../components';
 const image = require('../../../assets/images/auth-bg.jpg')
+
+
 
  const ProfileScreen  = ({ navigation }) => {
   const {login,avatar, userId} = useAuth()

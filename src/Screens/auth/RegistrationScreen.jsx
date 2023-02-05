@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import * as ImagePicker from "expo-image-picker";
 import {
     StyleSheet,
     View,
@@ -13,7 +12,7 @@ import {
 } from 'react-native';
 import {registerUser} from '../../redux/auth/authOperations'
 import { uploadPhotoToServer } from '../../utils/uploadPhotoToServer';
-
+import { pickImage } from '../../utils/pickImage';
 const image = require('../../../assets/images/auth-bg.jpg')
 import {Input, Title, Button, Avatar,LinkAuth} from '../../components'
 
@@ -42,16 +41,9 @@ const RegistrationScreen = ({ navigation }) => {
         setAvatar("")
     }
 
-    const pickImage = async () => {
-      let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
-        });
-        if (!result.canceled) {
-            setAvatar(result.assets[0].uri);
-        }
+    const chooseImage = async () => {
+        const imagePath = await pickImage();
+        setAvatar(imagePath)
   };
   
     const onSubmit = async() => {
@@ -75,7 +67,7 @@ const RegistrationScreen = ({ navigation }) => {
         <ImageBackground source={image}  style={styles.imageBg}>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
                 <View style={styles.container}>
-                    <Avatar uri={avatar } pickImage={pickImage}  />
+                    <Avatar uri={avatar } pickImage={chooseImage}  />
                     <View style={styles.form}>
                         <Title text="Регистрация" />
                         <Input value={login}
