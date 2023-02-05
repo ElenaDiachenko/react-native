@@ -44,7 +44,27 @@ export const PostsScreen = ({ navigation }) => {
     }
   };
   
+   const ItemDivider = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "100%",
+          backgroundColor: "#bdbdbd",
+        }}
+      />
+    );
+  }
+ 
   const renderItem = ({ item }) => (
+    <>
+    <View style={styles.authorBox}>
+           {item.avatar ?  <Image source={{uri:item.avatar}} style={styles.avatarImg} /> :  <Image source={defaultAvatar} style={styles.avatarImg} />}
+            <View>
+            <Text style={styles.userName}>{item.login}</Text>
+            <Text style={styles.userEmail}>{item.email}</Text>
+            </View>
+          </View>
     <View style={styles.contentBox}>
              <Image
               source={{uri:item.photo}}
@@ -95,23 +115,17 @@ export const PostsScreen = ({ navigation }) => {
                 <Text style={styles.location}>{item.location}</Text>
               </View>
             </View>
-          </View>
+      </View>
+      </>
   )
     return (
       <View style={styles.container}>
-       
-          <View style={styles.authorBox}>
-           {avatar ?  <Image source={{uri:avatar}} style={styles.avatarImg} /> :  <Image source={defaultAvatar} style={styles.avatarImg} />}
-            <View>
-            <Text style={styles.userName}>{login}</Text>
-            <Text style={styles.userEmail}>{email}</Text>
-            </View>
-          </View>
         <View style={styles.postsContainer}>
           <FlatList
            data={posts}
            keyExtractor={(item) => item.id}
-           renderItem={renderItem}
+            renderItem={renderItem}
+            ItemSeparatorComponent={ItemDivider}
           />
         </View>
         </View>
@@ -128,7 +142,7 @@ const styles = StyleSheet.create({
   },
   postsContainer: {
     width: "100%",
-    marginBottom: 120,
+    // marginBottom: 120,
   },
   authorBox: {
     flexDirection: 'row',

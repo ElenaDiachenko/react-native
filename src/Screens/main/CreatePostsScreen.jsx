@@ -24,7 +24,7 @@ const CreatePostsScreen = ({ navigation }) => {
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState("");
   const [coords, setCoords] = useState(null)
-  const { userId, login } = useAuth()
+  const { userId, login, avatar, email } = useAuth()
 
   useEffect(() => {
     (async () => {
@@ -106,6 +106,8 @@ const CreatePostsScreen = ({ navigation }) => {
           coords,
           userId,
           login,
+          avatar,
+          email,
           date:Date.now()
         }
         await addDoc(collection(db, "posts"), newPost).then(() => {
