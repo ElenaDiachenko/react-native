@@ -58,7 +58,7 @@ const CreatePostsScreen = ({ navigation }) => {
           aspect: [4, 3],
           quality: 1,
         });
-        if(result.canceled)return
+        if (result.canceled) return;
       const {coords,city,country} = await getLocation()
        setLocation(`${city}, ${country}`);
         setCoords(coords);
@@ -106,7 +106,6 @@ const CreatePostsScreen = ({ navigation }) => {
           coords,
           userId,
           login,
-          comments:[]
         }
         await addDoc(collection(db, "posts"), newPost).then(() => {
       Alert.alert(`Post was added successfully`);

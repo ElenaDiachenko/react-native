@@ -27,7 +27,9 @@ export const CommentsScreen = ({ route }) => {
   const [comments, setComments] = useState([]);
   const [isKeyboard, setIsKeyboard] = useState(false);
   const [loading, setLoading] = useState(false);
-   const [focusCommentInput, setFocusCommentInput] = useState(false);
+  const [focusCommentInput, setFocusCommentInput] = useState(false);
+   const [like, setLike] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   useEffect(() => {
     (async () => {

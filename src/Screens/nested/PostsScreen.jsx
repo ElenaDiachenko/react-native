@@ -1,25 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { EvilIcons, Feather } from '@expo/vector-icons';
-import { View, Text, StyleSheet, Image, FlatList ,TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
+import { doc, onSnapshot, addDoc,collection,arrayRemove, setDoc,arrayUnion, getDoc, query, orderBy, where } from 'firebase/firestore';
 import { db } from '../../firebase/config';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { useAuth } from '../../hooks/useAuth';
 
 const defaultAvatar = require('../../../assets/images/avatar.jpg');
 
 export const PostsScreen = ({ navigation }) => {
-  const {login,avatar,email} = useAuth()
+  const {login,avatar,email, userId} = useAuth()
   const [posts, setPosts] = useState([]);
- console.log(avatar)
-   useEffect(() => {
+
+  useEffect(() => {
     (async () => {
     const dbRef = collection(db, "posts");
-    onSnapshot(dbRef, (docSnap) =>
-      setPosts(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    onSnapshot(dbRef, (docSnap) =>{
+      setPosts(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))}
     );
   })();
   }, []);
 
+  
+   const createLike = async (postId) => {
+    try {
+      const docRef = doc(db, 'posts', postId)
+      const result = await getDoc(docRef)
+      const { likes } = result.data();
+
+      if (likes && likes.includes(userId)) {
+        await setDoc(docRef, {
+          likes: arrayRemove(userId)
+      }, { merge: true });
+      }
+      else {
+         await setDoc(docRef, {
+        likes: arrayUnion(userId)
+         }, { merge: true });
+        
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  };
   
   const renderItem = ({ item }) => (
     <View style={styles.contentBox}>
@@ -47,15 +69,12 @@ export const PostsScreen = ({ navigation }) => {
             <Text style={styles.commentsCount}>{item.commentsCount || 0}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-                // onPress={() => navigation.navigate("Comments", {
-                //   postId: item.id,
-                //   photo:item.photo
-                // })}
+            onPress={()=>createLike(item.id)}
                 activeOpacity={0.8}
-                style={{ flexDirection: "row", alignItems: "flex-end" }}
+                style={{ flexDirection: "row", marginRight: 9, alignItems: "flex-end" }}
               >
-                <Feather name="thumbs-up" size={24} color="#BDBDBD"  />
-                <Text style={styles.commentsCount}>0</Text>
+                <Feather name="thumbs-up" size={24} color="#BDBDBD" style={{marginRight:6, color: !item?.likes?.length  ? '#BDBDBD' : '#FF6C00'}} />
+            <Text style={styles.commentsCount}>{item?.likes?.length ||0}</Text>
               </TouchableOpacity>
               </View>
               <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
