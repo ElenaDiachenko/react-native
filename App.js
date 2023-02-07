@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, LogBox } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useCallback } from "react";
 import * as SplashScreen from 'expo-splash-screen';
@@ -29,6 +29,7 @@ export default function App() {
     return null;
   }
   console.log(store.getState())
+    LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core']);
   return (
     <Provider store={store}>
       <View style={styles.container} onLayout={onLayoutRootView}>
