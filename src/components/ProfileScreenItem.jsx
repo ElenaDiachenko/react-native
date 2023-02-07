@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { EvilIcons, Feather } from '@expo/vector-icons';
 
-
  export const ProfileScreenItem = (item, navigation, deletePost) => (
     <View style={styles.contentBox}>
      <View style={{position:"relative"}}>
@@ -9,12 +8,12 @@ import { EvilIcons, Feather } from '@expo/vector-icons';
               source={{uri:item.photo}}
               style={{ height: 240, borderRadius: 8, marginBottom:8 }}
        />
-     <TouchableOpacity
+              <TouchableOpacity
                 style={styles.deletePostBtn}
                 onPress={() => deletePost(item.id, item.photo)}
                 activeOpacity={0.8}
               >
-                <Feather name="trash-2" size={25} color='#ffffff' />
+               <Feather name="trash-2" size={27} color="#FF6C00" />
               </TouchableOpacity>
       </View>
      <View >

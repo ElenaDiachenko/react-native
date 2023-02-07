@@ -5,9 +5,9 @@ import {
 } from 'react-native';
 
 
-export const Loader = ({size ="large"}) => {
+export const Loader = ({size ="large", wrapper = true}) => {
  return (
-    <View style={styles.indicatorWrapper}>
+    <View style={wrapper ? styles.indicatorWrapper : null}>
          <ActivityIndicator size={size} color = "#FF6C00" />
      </View>
  )

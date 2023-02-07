@@ -5,21 +5,25 @@ import {
     TouchableOpacity
 } from 'react-native';
 const plus = require("../../assets/images/add.png");
+import { Loader } from './Loader';
 
-
-export const Avatar = ({ uri, pickImage, button }) => {
+export const Avatar = ({ uri, pickImage, button, loadingAvatar }) => {
 
   return (
-    <View style={styles.avatarBox}>
-      {uri?<Image source={{ uri }} style={styles.avatar} />:null}
+    <>
+    { loadingAvatar ? <Loader size='small'/> : (
+      <View style={styles.avatarBox}>
+      {uri ?<Image source={{ uri }} style={styles.avatar} />:null}
       <TouchableOpacity
-        style={styles.plusBox}
+        style={button ? styles.checkBox : styles.plusBox}
         onPress={()=>pickImage()}
       >
         {button ? button : <Image source={plus} style={styles.plus}  />}
       </TouchableOpacity>
       
-    </View>  )
+    </View>
+   )}</>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -42,14 +46,22 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 14,
     right: -12.5,
-
+  },
+  checkBox: {
+    position: "absolute",
+    bottom: 14,
+    right: -12.5,
+    borderColor: "#FF6C00",
+    borderWidth: 1,
+    borderRadius:50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding:1,
+    backgroundColor:"#ffffff"
     },
     plus: {
-    width: 25,
-    height: 25,
-    // position: "absolute",
-    // bottom: 14,
-    // right: -12.5,
+    width: 27,
+    height: 27,
   },
    
    

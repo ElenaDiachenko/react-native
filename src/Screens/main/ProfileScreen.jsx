@@ -10,15 +10,16 @@ import { uploadPhotoToServer } from '../../utils/uploadPhotoToServer';
 import {updateUserAvatar} from '../../redux/auth/authOperations'
 import { Avatar,ProfileScreenItem , Loader} from '../../components';
 const image = require('../../../assets/images/auth-bg.jpg');
-import { Ionicons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 
 const ProfileScreen = ({ navigation }) => {
   const {login,avatar, userId} = useAuth()
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
+  const [loadingAvatar, setLoadingAvatar] = useState(false)
   const [newAvatar,setNewAvatar] = useState("")
-  const uploadBtn= <Ionicons name="checkmark-circle-outline" size={30} color="black" /> 
+  const uploadBtn= <Feather name="check" size={25} color="#FF6C00" /> 
   const dispatch= useDispatch()
 
   useEffect(() => {
@@ -47,19 +48,25 @@ const ProfileScreen = ({ navigation }) => {
   
   const deleteImageFromStorage = async (url) => {
     try {
+    
     const pictureRef = ref(storage, url);
-    await deleteObject(pictureRef);
-      
+      await deleteObject(pictureRef);
+    
     } catch (error) {
       console.log(error)
+     
     }
 }
  
   const updateAvatar = async () => {
+    try {
+      setLoadingAvatar(true)
     await deleteImageFromStorage(avatar)
     const photoURL = await uploadPhotoToServer(newAvatar, 'avatars');
-    dispatch(updateUserAvatar(photoURL));
-
+      await dispatch(updateUserAvatar(photoURL));
+      setNewAvatar('')
+    setLoadingAvatar(false)
+    
     const q = query(collection(db, 'posts'), where('userId', '==', userId));
      
     const querySnapshot = await getDocs(q);
@@ -67,9 +74,13 @@ const ProfileScreen = ({ navigation }) => {
    setDoc(doc.ref,{
     avatar:photoURL
    }, {merge: true})
-}); 
-    setNewAvatar('')
+    }); 
+ 
     
+    } catch (error) {
+      console.log(error)
+       setLoadingAvatar(false)
+   }
    }
 
   const deletePost = async (postId, photoURL) => {
@@ -83,7 +94,7 @@ const ProfileScreen = ({ navigation }) => {
        <View style={styles.mainContainer}>
         <ImageBackground source={image}  style={styles.imageBg}>
       <View style={styles.container}>
-       <Avatar pickImage={newAvatar ? updateAvatar : chooseImage}  uri={newAvatar? newAvatar :avatar} button={newAvatar && uploadBtn} />
+       <Avatar pickImage={newAvatar ? updateAvatar : chooseImage}  uri={newAvatar? newAvatar :avatar} button={newAvatar && uploadBtn} loadingAvatar={loadingAvatar} />
            <View style={{marginTop:80, marginBottom: 24}}>
              <Text style={styles.profileTitle}>{login }</Text>
           </View>

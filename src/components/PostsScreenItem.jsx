@@ -6,7 +6,9 @@ const defaultAvatar = require('../../assets/images/avatar.png');
 export  const PostsScreenItem = (item, navigation,createLike) => (
     <>
     <View style={styles.authorBox}>
-           {item.avatar ?  <Image source={{uri:item.avatar}} style={styles.avatarImg} /> :  <Image source={defaultAvatar} style={styles.avatarImg} />}
+      {item.avatar ?
+        <Image source={{ uri: item.avatar }} style={styles.avatarImg} />
+        : <Image source={defaultAvatar} style={styles.avatarImg} />}
             <View>
             <Text style={styles.userName}>{item.login}</Text>
             <Text style={styles.userEmail}>{item.email}</Text>
@@ -41,7 +43,9 @@ export  const PostsScreenItem = (item, navigation,createLike) => (
                 activeOpacity={0.8}
                 style={{ flexDirection: "row", marginRight: 9, alignItems: "flex-end" }}
               >
-                <Feather name="thumbs-up" size={24} color="#BDBDBD" style={{marginRight:6, color: !item?.likes?.length  ? '#BDBDBD' : '#FF6C00'}} />
+            <Feather name="thumbs-up" size={24} color="#BDBDBD"
+              style={{ marginRight: 6, color: !item?.likes?.length ? '#BDBDBD' : '#FF6C00' }}
+            />
             <Text style={styles.commentsCount}>{item?.likes?.length ||0}</Text>
               </TouchableOpacity>
               </View>
