@@ -86,19 +86,17 @@ export const changeAuthStatusUser = () => async (dispatch, getState) => {
 };
 
     
-export const logoutUser = () => async (dispatch, getState) => {
+export const logoutUser = () => async (dispatch) => {
     try {
      await signOut(auth);
       dispatch(logout());
-      const state = getState();
-        console.log(state, 'state redux LOGOUT')
     } catch (error) {
        Alert.alert(error.message)
         console.log(error);
     }
 }
 
-   export const updateUserAvatar = (avatar) => async (dispatch, getState) => {
+   export const updateUserAvatar = (avatar) => async (dispatch) => {
 
      try {
        await updateProfile(auth.currentUser, {

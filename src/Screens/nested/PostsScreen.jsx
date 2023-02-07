@@ -62,7 +62,6 @@ export const PostsScreen = ({ navigation }) => {
            data={posts}
            keyExtractor={(item) => item.id}
             renderItem={({ item }) => {
-              console.log(item)
               return PostsScreenItem(item, navigation, createLike)
             }}
             ItemSeparatorComponent={ItemDivider}

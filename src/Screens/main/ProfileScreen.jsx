@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { View, Text, StyleSheet,  FlatList,  ImageBackground } from 'react-native';
-import { onSnapshot, collection, query, orderBy, where, setDoc, getDocs } from 'firebase/firestore';
+import { onSnapshot, collection, query, orderBy, where, setDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db, storage,deleteObject, ref } from '../../firebase/config';
 
 import { useAuth } from '../../hooks/useAuth';
@@ -36,9 +36,9 @@ const ProfileScreen = ({ navigation }) => {
         setNewAvatar(imagePath)
   };
   
-  const deleteAvatar = async () => {
+  const deleteImageFromStorage = async (url) => {
     try {
-    const pictureRef = ref(storage, avatar);
+    const pictureRef = ref(storage, url);
     await deleteObject(pictureRef);
       
     } catch (error) {
@@ -47,7 +47,7 @@ const ProfileScreen = ({ navigation }) => {
 }
  
   const updateAvatar = async () => {
-    await deleteAvatar()
+    await deleteImageFromStorage(avatar)
     const photoURL = await uploadPhotoToServer(newAvatar, 'avatars');
     dispatch(updateUserAvatar(photoURL));
 
@@ -62,6 +62,12 @@ const ProfileScreen = ({ navigation }) => {
     setNewAvatar('')
     
    }
+
+  const deletePost = async (postId, photoURL) => {
+     const docRef = doc(db, 'posts', postId)
+    await deleteDoc(docRef);
+    await deleteImageFromStorage(photoURL)
+  }
    return (
        <View style={styles.mainContainer}>
         <ImageBackground source={image}  style={styles.imageBg}>
@@ -74,7 +80,7 @@ const ProfileScreen = ({ navigation }) => {
           <FlatList
            data={posts}
            keyExtractor={(item) => item.id}
-            renderItem={({item})=>ProfileScreenItem(item, navigation)}
+            renderItem={({item})=>ProfileScreenItem(item, navigation, deletePost)}
           />
         </View>
         </View>

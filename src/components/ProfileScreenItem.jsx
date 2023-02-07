@@ -2,17 +2,26 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { EvilIcons, Feather } from '@expo/vector-icons';
 
 
- export const ProfileScreenItem = (item, navigation) => (
+ export const ProfileScreenItem = (item, navigation, deletePost) => (
     <View style={styles.contentBox}>
-             <Image
+     <View style={{position:"relative"}}>
+          <Image
               source={{uri:item.photo}}
               style={{ height: 240, borderRadius: 8, marginBottom:8 }}
-            />
-      <View>
+       />
+     <TouchableOpacity
+                style={styles.deletePostBtn}
+                onPress={() => deletePost(item.id, item.photo)}
+                activeOpacity={0.8}
+              >
+                <Feather name="trash-2" size={25} color='#ffffff' />
+              </TouchableOpacity>
+      </View>
+     <View >
         <Text style={styles.description}>
             {item.description}
-            </Text>
-            </View>
+       </Text>
+      </View>
 
             <View style={styles.info}>
         <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
@@ -85,6 +94,18 @@ import { EvilIcons, Feather } from '@expo/vector-icons';
     lineHeight: 19,
     textDecorationLine: "underline",
     marginLeft: 4,
-  }
+    },
+    deletePostBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 100,
+    width: 40,
+    height:40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    borderRadius: 50,
+  },
 });
 
