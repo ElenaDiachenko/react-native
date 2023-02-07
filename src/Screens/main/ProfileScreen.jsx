@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { View, Text, StyleSheet,  FlatList,  ImageBackground } from 'react-native';
+import { View, Text, StyleSheet,  FlatList,  ImageBackground, Alert } from 'react-native';
 import { onSnapshot, collection, query, orderBy, where, setDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db, storage,deleteObject, ref } from '../../firebase/config';
 
@@ -8,7 +8,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { pickImage } from '../../utils/pickImage';
 import { uploadPhotoToServer } from '../../utils/uploadPhotoToServer';
 import {updateUserAvatar} from '../../redux/auth/authOperations'
-import { Avatar,ProfileScreenItem } from '../../components';
+import { Avatar,ProfileScreenItem , Loader} from '../../components';
 const image = require('../../../assets/images/auth-bg.jpg');
 import { Ionicons } from '@expo/vector-icons';
 
@@ -16,17 +16,26 @@ import { Ionicons } from '@expo/vector-icons';
 const ProfileScreen = ({ navigation }) => {
   const {login,avatar, userId} = useAuth()
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false)
   const [newAvatar,setNewAvatar] = useState("")
   const uploadBtn= <Ionicons name="checkmark-circle-outline" size={30} color="black" /> 
   const dispatch= useDispatch()
 
   useEffect(() => {
     (async () => {
-    const q = query(collection(db, 'posts'), where('userId', '==', userId), orderBy('date', 'desc'));
+      try {
+        setLoading(true)
+      const q = query(collection(db, 'posts'), where('userId', '==', userId), orderBy('date', 'desc'));
     
     onSnapshot(q, (querySnapshot) => {
       setPosts(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, })))
     })
+        setLoading(false)
+      } catch (error) {
+      console.log(error);
+     Alert.alert("Something went wrong:( Try again later")
+     setLoading(false)
+    }
   })();
   }, []);
 
@@ -68,7 +77,9 @@ const ProfileScreen = ({ navigation }) => {
     await deleteDoc(docRef);
     await deleteImageFromStorage(photoURL)
   }
-   return (
+  return (
+    <>
+      {loading ? <Loader /> : (
        <View style={styles.mainContainer}>
         <ImageBackground source={image}  style={styles.imageBg}>
       <View style={styles.container}>
@@ -85,8 +96,9 @@ const ProfileScreen = ({ navigation }) => {
         </View>
         </View>
            </ImageBackground>
-              
             </View>
+    )}
+    </>
   )
 }
 

@@ -1,22 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { View,  StyleSheet, FlatList } from 'react-native';
+import { View,  StyleSheet, FlatList,Alert } from 'react-native';
 import { doc, onSnapshot, collection,arrayRemove, setDoc,arrayUnion, getDoc, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../hooks/useAuth';
 import {PostsScreenItem} from "../../components";
-
+import { Loader } from '../../components';
 
 export const PostsScreen = ({ navigation }) => {
   const {userId} = useAuth()
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    (async () => {
-    const q = query(collection(db, 'posts'), orderBy('date', 'desc'));
+       (async () => {
+         try {
+      setLoading(true)
+     const q = query(collection(db, 'posts'), orderBy('date', 'desc'));
     
     onSnapshot(q, (querySnapshot) => {
       setPosts(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, })))
     })
+      setLoading(false)
+   } catch (error) {
+     console.log(error);
+     Alert.alert("Something went wrong:( Try again later")
+     setLoading(false)
+   }
+   
   })();
   }, []);
 
@@ -56,7 +66,9 @@ export const PostsScreen = ({ navigation }) => {
   }
 
     return (
-      <View style={styles.container}>
+      <>
+        {loading ? <Loader /> : (
+           <View style={styles.container}>
         <View style={styles.postsContainer}>
           <FlatList
            data={posts}
@@ -68,6 +80,8 @@ export const PostsScreen = ({ navigation }) => {
           />
         </View>
         </View>
+      )}
+      </>
   )
 }
 
