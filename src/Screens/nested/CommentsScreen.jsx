@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ActivityIndicator,
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
@@ -18,7 +19,7 @@ import { db } from '../../firebase/config';
 import { useAuth } from "../../hooks/useAuth";
 const defaultAvatar = require('../../../assets/images/avatar.png');
 import { AntDesign } from '@expo/vector-icons';
-
+import {Loader} from '../../components'
 
 export const CommentsScreen = ({ route }) => {
   const { postId, photo } = route.params;
@@ -122,23 +123,24 @@ export const CommentsScreen = ({ route }) => {
 };
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+  <>
+    { loading ? <Loader />: (
+      <TouchableWithoutFeedback onPress={keyboardHide}>
       <View
         style={styles.container}
       >
-          <Image
+
+             <Image
           source={{ uri: photo }}
           style={styles.preview}
         /> 
         <View style={{flex:1, flexGrow :1, marginTop:24}}>
-            <FlatList
+         
+          <FlatList
           data={comments}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
             />
-          {/* <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          > */}
             <View style={styles.form} >
               <TextInput
                 value={comment}
@@ -159,10 +161,12 @@ export const CommentsScreen = ({ route }) => {
                 <AntDesign name='arrowup' size={20} color='#ffffff' />
               </TouchableOpacity>
             </View>
-          {/* </KeyboardAvoidingView> */}
         </View>
+     
       </View>
       </TouchableWithoutFeedback>
+    )}
+    </>
   )
 }
 
