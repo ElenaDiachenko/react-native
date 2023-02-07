@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { View, Text, StyleSheet,  FlatList,  ImageBackground, Alert } from 'react-native';
 import { onSnapshot, collection, query, orderBy, where, setDoc, updateDoc } from 'firebase/firestore';
-import { deleteObject, ref } from "firebase/storage";
-import { db, storage } from '../../firebase/config';
+import { db, storage,deleteObject, ref } from '../../firebase/config';
 
 import { useAuth } from '../../hooks/useAuth';
 import { pickImage } from '../../utils/pickImage';
