@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { View, Text, StyleSheet,  FlatList,  ImageBackground, Alert } from 'react-native';
-import { onSnapshot, collection, query, orderBy, where, setDoc, updateDoc } from 'firebase/firestore';
+import { View, Text, StyleSheet,  FlatList,  ImageBackground } from 'react-native';
+import { onSnapshot, collection, query, orderBy, where, setDoc, getDocs } from 'firebase/firestore';
 import { db, storage,deleteObject, ref } from '../../firebase/config';
 
 import { useAuth } from '../../hooks/useAuth';
@@ -45,19 +45,20 @@ const ProfileScreen = ({ navigation }) => {
       console.log(error)
     }
 }
-
  
   const updateAvatar = async () => {
     await deleteAvatar()
     const photoURL = await uploadPhotoToServer(newAvatar, 'avatars');
     dispatch(updateUserAvatar(photoURL));
 
-    //  const docRef = doc(db, 'posts', userId)
-    // const q = query(collection(db, 'posts'), where('userId', '==', userId));
+    const q = query(collection(db, 'posts'), where('userId', '==', userId));
      
-    // onSnapshot(q, (querySnapshot) => {
-    //   setPosts(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, })))
-    // })
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+   setDoc(doc.ref,{
+    avatar:photoURL
+   }, {merge: true})
+}); 
     setNewAvatar('')
     
    }

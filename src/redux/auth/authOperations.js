@@ -81,8 +81,6 @@ export const changeAuthStatusUser = () => async (dispatch, getState) => {
       }
       dispatch(updateUserProfile(currentUser));
       dispatch(changeAuthStatus({ authStatus: true }));
-        const state = getState();
-        console.log(state, 'state redux STATUS')
     }
   });
 };
@@ -109,7 +107,6 @@ export const logoutUser = () => async (dispatch, getState) => {
        const { photoURL } = auth.currentUser;
        
      dispatch(changeAvatar({ avatar :photoURL}));
-     console.log('UPDATE AVATAR REDUX #############')
      } catch (error) {
        console.log(error)
     }
