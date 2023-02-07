@@ -48,12 +48,13 @@ const RegistrationScreen = ({ navigation }) => {
   
     const onSubmit = async() => {
         keyboardHide();
-        const photoURL = await uploadPhotoToServer(avatar, 'avatars');
+        const {photoURL,storagePath} = await uploadPhotoToServer(avatar, 'avatars');
         const credentials = {
             login, 
             email,
             password,
-            avatar:photoURL
+            avatar: photoURL,
+            storagePath
         }
          
        dispatch(registerUser(credentials))

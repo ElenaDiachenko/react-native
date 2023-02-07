@@ -61,7 +61,10 @@ export const PostsScreen = ({ navigation }) => {
           <FlatList
            data={posts}
            keyExtractor={(item) => item.id}
-            renderItem={({item})=>PostsScreenItem(item, navigation,createLike)}
+            renderItem={({ item }) => {
+              console.log(item)
+              return PostsScreenItem(item, navigation, createLike)
+            }}
             ItemSeparatorComponent={ItemDivider}
           />
         </View>

@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet,  FlatList,  ImageBackground } from 'react-native';
-import {  onSnapshot, collection, query, orderBy, where } from 'firebase/firestore';
-import { db } from '../../firebase/config';
+import { useDispatch } from 'react-redux';
+import { View, Text, StyleSheet,  FlatList,  ImageBackground, Alert } from 'react-native';
+import { onSnapshot, collection, query, orderBy, where, setDoc, updateDoc } from 'firebase/firestore';
+import { deleteObject, ref } from "firebase/storage";
+import { db, storage } from '../../firebase/config';
+
 import { useAuth } from '../../hooks/useAuth';
 import { pickImage } from '../../utils/pickImage';
+import { uploadPhotoToServer } from '../../utils/uploadPhotoToServer';
+import {updateUserAvatar} from '../../redux/auth/authOperations'
 import { Avatar,ProfileScreenItem } from '../../components';
-const image = require('../../../assets/images/auth-bg.jpg')
+const image = require('../../../assets/images/auth-bg.jpg');
+import { Ionicons } from '@expo/vector-icons';
 
 
-
- const ProfileScreen  = ({ navigation }) => {
+const ProfileScreen = ({ navigation }) => {
   const {login,avatar, userId} = useAuth()
   const [posts, setPosts] = useState([]);
+  const [newAvatar,setNewAvatar] = useState("")
+  const uploadBtn= <Ionicons name="checkmark-circle-outline" size={30} color="black" /> 
+  const dispatch= useDispatch()
 
   useEffect(() => {
     (async () => {
@@ -24,11 +32,41 @@ const image = require('../../../assets/images/auth-bg.jpg')
   }, []);
 
 
+   const chooseImage = async () => {
+        const imagePath = await pickImage();
+        setNewAvatar(imagePath)
+  };
+  
+  const deleteAvatar = async () => {
+    try {
+    const pictureRef = ref(storage, avatar);
+    await deleteObject(pictureRef);
+      
+    } catch (error) {
+      console.log(error)
+    }
+}
+
+ 
+  const updateAvatar = async () => {
+    await deleteAvatar()
+    const photoURL = await uploadPhotoToServer(newAvatar, 'avatars');
+    dispatch(updateUserAvatar(photoURL));
+
+    //  const docRef = doc(db, 'posts', userId)
+    // const q = query(collection(db, 'posts'), where('userId', '==', userId));
+     
+    // onSnapshot(q, (querySnapshot) => {
+    //   setPosts(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, })))
+    // })
+    setNewAvatar('')
+    
+   }
    return (
        <View style={styles.mainContainer}>
         <ImageBackground source={image}  style={styles.imageBg}>
       <View style={styles.container}>
-       <Avatar uri={avatar}  />
+       <Avatar pickImage={newAvatar ? updateAvatar : chooseImage}  uri={newAvatar? newAvatar :avatar} button={newAvatar && uploadBtn} />
            <View style={{marginTop:80, marginBottom: 24}}>
              <Text style={styles.profileTitle}>{login }</Text>
           </View>

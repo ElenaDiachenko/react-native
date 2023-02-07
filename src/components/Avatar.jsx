@@ -6,7 +6,9 @@ import {
 } from 'react-native';
 const plus = require("../../assets/images/add.png");
 
-export const Avatar = ({uri, pickImage}) => {
+
+export const Avatar = ({ uri, pickImage, button }) => {
+
   return (
     <View style={styles.avatarBox}>
       {uri?<Image source={{ uri }} style={styles.avatar} />:null}
@@ -14,7 +16,7 @@ export const Avatar = ({uri, pickImage}) => {
         style={styles.plusBox}
         onPress={()=>pickImage()}
       >
-        <Image source={plus} style={styles.plus}  />
+        {button ? button : <Image source={plus} style={styles.plus}  />}
       </TouchableOpacity>
       
     </View>  )
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
     resizeMode:"cover",
   },
   plusBox: {
-          position: "absolute",
+    position: "absolute",
     bottom: 14,
     right: -12.5,
 

@@ -1,10 +1,10 @@
-import { createUserWithEmailAndPassword,signInWithEmailAndPassword, signOut ,  onAuthStateChanged, updateProfile, updateCurrentUser } from 'firebase/auth';
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword, signOut ,  onAuthStateChanged, updateProfile } from 'firebase/auth';
 import { Alert } from "react-native";
 import { auth } from '../../firebase/config'
 import { authSlice} from "./authSlice";
-const { changeAuthStatus,updateUserProfile,logout } = authSlice.actions;
+const { changeAuthStatus,updateUserProfile,logout ,changeAvatar} = authSlice.actions;
 
-export const registerUser = ({ login, email, password, avatar }) => async (dispatch, getState) => {
+export const registerUser = ({ login, email, password, avatar }) => async (dispatch) => {
       try {
         await createUserWithEmailAndPassword(auth, email, password,avatar);
         await updateProfile(auth.currentUser, {
@@ -19,11 +19,6 @@ export const registerUser = ({ login, email, password, avatar }) => async (dispa
           avatar: user.photoURL,
         }
         dispatch(updateUserProfile(currentUser));
-
-
-        const state = getState();
-        console.log(state, 'state redux REGISTER')
-
         Alert.alert(`Wellcome, ${login}`)
       } catch (error) {
        const errorCode = error.code;
@@ -84,7 +79,6 @@ export const changeAuthStatusUser = () => async (dispatch, getState) => {
         email: user.email,
         avatar: user.photoURL,
       }
-console.log(user, 'CHANGE USER')
       dispatch(updateUserProfile(currentUser));
       dispatch(changeAuthStatus({ authStatus: true }));
         const state = getState();
@@ -105,3 +99,18 @@ export const logoutUser = () => async (dispatch, getState) => {
         console.log(error);
     }
 }
+
+   export const updateUserAvatar = (avatar) => async (dispatch, getState) => {
+
+     try {
+       await updateProfile(auth.currentUser, {
+       photoURL: avatar,
+     });
+       const { photoURL } = auth.currentUser;
+       
+     dispatch(changeAvatar({ avatar :photoURL}));
+     console.log('UPDATE AVATAR REDUX #############')
+     } catch (error) {
+       console.log(error)
+    }
+};
