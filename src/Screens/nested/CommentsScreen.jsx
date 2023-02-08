@@ -61,6 +61,7 @@ export const CommentsScreen = ({ route }) => {
         login,
         date,
         time,
+        avatar
       });
       await setDoc(docRef, {
         commentsCount:comments.length+1
@@ -97,8 +98,8 @@ export const CommentsScreen = ({ route }) => {
     }}
       onStartShouldSetResponder={() => true}>
       <View>
-          {avatar
-            ? <Image source={{ uri: avatar }} style={styles.avatarImg} />
+          {item.avatar
+            ? <Image source={{ uri: item.avatar }} style={styles.avatarImg} />
             : <Image source={defaultAvatar} style={styles.avatarImg} />}
       </View>
       
@@ -146,7 +147,7 @@ export const CommentsScreen = ({ route }) => {
                 value={comment}
                onChangeText={setComment}
                 placeholder='Комментировать...'
-                 placeholderTextColor='#BDBDBD'
+                placeholderTextColor='#BDBDBD'
                 onFocus={onFocusCommentInput}
                 onBlur={onBlurCommentInput}
                 style={styles.input}

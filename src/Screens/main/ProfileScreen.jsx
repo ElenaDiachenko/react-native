@@ -59,7 +59,9 @@ const ProfileScreen = ({ navigation }) => {
   const updateAvatar = async () => {
     try {
       setLoadingAvatar(true)
-    await deleteImageFromStorage(avatar)
+      if (avatar) {
+        await deleteImageFromStorage(avatar)
+      }
     const photoURL = await uploadPhotoToServer(newAvatar, 'avatars');
       await dispatch(updateUserAvatar(photoURL));
       setNewAvatar('')
