@@ -6,7 +6,7 @@ const { changeAuthStatus,updateUserProfile,logout ,changeAvatar} = authSlice.act
 
 export const registerUser = ({ login, email, password, avatar }) => async (dispatch ) => {
       try {
-        await createUserWithEmailAndPassword(auth, email, password, avatar);
+        await createUserWithEmailAndPassword(auth, email, password);
         
         await updateProfile(auth.currentUser, {
           displayName: login,

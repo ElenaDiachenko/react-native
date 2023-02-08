@@ -1,8 +1,9 @@
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from '../firebase/config';
-
+import {Alert} from 'react-native'
 
 export const uploadPhotoToServer = async (photo, path) => {
+  
  if (!photo && !path) return;
     try {
       const response = await fetch(photo);

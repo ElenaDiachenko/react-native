@@ -20,7 +20,7 @@ const RegistrationScreen = ({ navigation }) => {
     const dispatch = useDispatch();
 
     const [loading, setLoading] = useState(false)
-    const [avatar,setAvatar] = useState("")
+    const [avatar,setAvatar] = useState(null)
     const [login, setLogin] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -49,8 +49,11 @@ const RegistrationScreen = ({ navigation }) => {
   
     const onSubmit = async() => {
         keyboardHide();
-        setLoading(true)
-        const photoURL = await uploadPhotoToServer(avatar, 'avatars');
+        setLoading(true);
+        let photoURL = null;
+        if (avatar) {
+            photoURL = await uploadPhotoToServer(avatar, 'avatars');
+        }
         const credentials = {
             login, 
             email,
