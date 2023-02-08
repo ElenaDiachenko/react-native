@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "react-native-test",
-    "slug": "react-native-test",
+    "name": "blog-app",
+    "slug": "blog-app",
+    "description":"My first react-native project.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
