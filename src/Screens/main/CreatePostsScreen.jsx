@@ -24,7 +24,7 @@ const CreatePostsScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState('');
   const [isKeyboard, setIsKeyboard] = useState(false);
   const [cameraRef, setCameraRef] = useState(null);
-  const [startCamera, setStartCamera] = useState(false);
+  const [startCamera, setStartCamera] = useState(false)
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState("");
   const [coords, setCoords] = useState(null)
@@ -33,10 +33,10 @@ const CreatePostsScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermissionsAsync();
-      const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
+      // const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
       const locationPermission = await Location.requestForegroundPermissionsAsync();
       setHasCameraPermission(cameraPermission.status === "granted");
-      setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
+      // setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
       setHasLocationPermission(locationPermission.status === 'granted');
     })();
   }, []);
@@ -56,7 +56,6 @@ const CreatePostsScreen = ({ navigation }) => {
 
     const takePhotoWithLocationFromGallery = async () => {
       try {
-
         const imagePath = await pickImage();
       const {coords,city,country} = await getLocation()
        setLocation(`${city}, ${country}`);
@@ -81,21 +80,36 @@ const CreatePostsScreen = ({ navigation }) => {
      setLocation(`${city}, ${country}`);
      setCoords(coords);
      setPhoto(uri);
-  
+    setStartCamera(true)
   } catch (error) {
     console.log(error)
   }
   };
 
-  const reset = () => {
-    setDescription('');
-    setLocation("");
-    setPhoto('')
+  const savePhoto = async () => {
+    if (!startCamera) return;
+    const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
+    setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
+    if (!hasMediaLibraryPermission) return;
+    MediaLibrary.saveToLibraryAsync(photo);
+    setStartCamera(false)
+  };
+  
+  const removePhoto = () => {
+    setPhoto('');
   }
   
+    const clearPost = () => {
+    setDescription('');
+    setLocation("");
+    setPhoto('');
+  }
+  
+
   const publishPost = async () => {
     if (photo && coords) {
       setLoading(true)
+      savePhoto()
       const photoURL = await uploadPhotoToServer(photo, 'images');
       try {
         const newPost= {
@@ -110,13 +124,9 @@ const CreatePostsScreen = ({ navigation }) => {
           date:Date.now()
         }
         await addDoc(collection(db, "posts"), newPost);
-        setLoading(false)
          Alert.alert(`Post was added successfully`);
-        //   .then(() => {
-        //   Alert.alert(`Post was added successfully`);
-          
-        // });
-        reset()
+        clearPost()
+        setLoading(false)
         navigation.navigate("Posts");
       } catch (error) {
         console.log(error)
@@ -125,20 +135,7 @@ const CreatePostsScreen = ({ navigation }) => {
     }
   }
 
-  // if (photo) {
-  //   let sharePic = () => {
-  //     shareAsync(photo).then(() => {
-  //       setPhoto(undefined);
-  //     });
-  //   };
 
-  //   let savePhoto = () => {
-  //     MediaLibrary.saveToLibraryAsync(photo).then(() => {
-  //       setPhoto(undefined);
-  //     });
-  //   };
-
- 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
@@ -148,26 +145,26 @@ const CreatePostsScreen = ({ navigation }) => {
               marginBottom: Platform.OS === "ios" && isKeyboard ? 80 : 20,
             }}>
             <View style={{...styles.containerCamera,borderColor: photo ? '#000000' : '#E8E8E8'}}>
-      <Camera
-        style={{ ...styles.camera}}
-         ref={(camRef) => setCameraRef(camRef)}
-          autoFocus='auto'
-        >
-          {photo && (
-            <Image
+           { !photo ?  <Camera
+            style={{ ...styles.camera}}
+            ref={setCameraRef}
+            >
+                <TouchableOpacity style={{
+                      ...styles.photoIcon,
+                      backgroundColor: photo ? 'rgba(255, 255, 255, 0.3)' : '#ffffff'
+                    }}
+                    activeOpacity={0.8} onPress={takePhotoWithLocation}>
+                  <Ionicons name="camera-outline" size={24} color={photo ? '#ffffff' : '#BDBDBD'} />
+              </TouchableOpacity>
+                  </Camera> : 
+                <View style={{ ...styles.camera}}>
+                  <Image
               source={{ uri: photo }}
               style={styles.preview}
             />
-        )}
-            <TouchableOpacity style={{
-                  ...styles.photoIcon,
-                  backgroundColor: photo ? 'rgba(255, 255, 255, 0.3)' : '#ffffff'
-                }}
-                activeOpacity={0.8} onPress={takePhotoWithLocation}>
-              <Ionicons name="camera-outline" size={24} color={photo ? '#ffffff' : '#BDBDBD'} />
-          </TouchableOpacity>
-              </Camera>
-               {!photo?(<TouchableOpacity
+            </View>
+       }
+               {!photo ? (<TouchableOpacity
                 onPress={takePhotoWithLocationFromGallery}
                 activeOpacity={0.8}
               >
@@ -175,7 +172,7 @@ const CreatePostsScreen = ({ navigation }) => {
                   Загрузить фото из галереи
                 </Text>
               </TouchableOpacity>):(<TouchableOpacity
-               onPress={()=>{}}
+               onPress={removePhoto}
                 activeOpacity={0.8}
               >
                 <Text style={styles.uploadEditButton}>
