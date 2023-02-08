@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
     backgroundColor:"#ffffff"
     },
     plus: {
-    width: 27,
-    height: 27,
+    width: 28,
+    height: 28,
   },
    
    

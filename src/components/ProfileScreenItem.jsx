@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { EvilIcons, Feather } from '@expo/vector-icons';
+import { EvilIcons, Feather, AntDesign } from '@expo/vector-icons';
 
- export const ProfileScreenItem = (item, navigation, deletePost) => (
+ export const ProfileScreenItem = (item, navigation, deletePost, loadingDelete) => (
     <View style={styles.contentBox}>
      <View style={{position:"relative"}}>
           <Image
@@ -13,7 +13,10 @@ import { EvilIcons, Feather } from '@expo/vector-icons';
                 onPress={() => deletePost(item.id, item.photo)}
                 activeOpacity={0.8}
               >
-               <Feather name="trash-2" size={27} color="#FF6C00" />
+         {loadingDelete ?
+           <AntDesign name="loading1" size={24} color="#FF6C00" />
+           : <Feather name="trash-2" size={27} color="#FF6C00" />
+         }
               </TouchableOpacity>
       </View>
      <View >

@@ -3,7 +3,10 @@ import { Camera } from 'expo-camera';
 import * as Location from 'expo-location';
 import { Ionicons, Feather} from "@expo/vector-icons";
 import * as MediaLibrary from 'expo-media-library';
-import { StyleSheet, View, Text, TextInput ,TouchableOpacity, Image,TouchableWithoutFeedback,KeyboardAvoidingView ,Keyboard, Alert} from 'react-native';
+import {
+  StyleSheet, View, Text, TextInput, TouchableOpacity, Image,
+  TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Alert, ActivityIndicator
+} from 'react-native';
 import { collection, addDoc } from "firebase/firestore";
 import { db} from '../../firebase/config'
 import {useAuth} from '../../hooks/useAuth'
@@ -11,9 +14,10 @@ import { uploadPhotoToServer } from '../../utils/uploadPhotoToServer';
 import { getLocation } from '../../utils/getLocation';
 import { pickImage } from '../../utils/pickImage';
 
+
 const CreatePostsScreen = ({ navigation }) => {
   //  let cameraRef = useRef();
-  
+  const [loading, setLoading] = useState(false)
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasLocationPermission, setHasLocationPermission] = useState(null);
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
@@ -91,9 +95,9 @@ const CreatePostsScreen = ({ navigation }) => {
   
   const publishPost = async () => {
     if (photo && coords) {
+      setLoading(true)
       const photoURL = await uploadPhotoToServer(photo, 'images');
       try {
-        
         const newPost= {
           photo: photoURL,
           description,
@@ -105,13 +109,18 @@ const CreatePostsScreen = ({ navigation }) => {
           email,
           date:Date.now()
         }
-        await addDoc(collection(db, "posts"), newPost).then(() => {
-      Alert.alert(`Post was added successfully`);
-        });
+        await addDoc(collection(db, "posts"), newPost);
+        setLoading(false)
+         Alert.alert(`Post was added successfully`);
+        //   .then(() => {
+        //   Alert.alert(`Post was added successfully`);
+          
+        // });
         reset()
         navigation.navigate("Posts");
       } catch (error) {
         console.log(error)
+         setLoading(false)
       }
     }
   }
@@ -203,12 +212,12 @@ const CreatePostsScreen = ({ navigation }) => {
               onPress={publishPost}
               style={{ ...styles.button, backgroundColor: photo ? '#FF6C00' : '#F6F6F6' }}
               activeOpacity={0.8}
-            >
-              <Text
+              >
+              {loading ? <ActivityIndicator size='large' color = "#ffffff" /> :<Text
                 style={{ ...styles.textBtnSubmit, color: photo ? '#ffffff' : '#BDBDBD' }}
               >
                 Опубликовать
-              </Text>
+              </Text>}
             </TouchableOpacity>
             </View>
         </View>

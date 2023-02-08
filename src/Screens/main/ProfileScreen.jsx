@@ -18,6 +18,7 @@ const ProfileScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
   const [loadingAvatar, setLoadingAvatar] = useState(false)
+  const [loadingDelete, setLoadingDelete] = useState(false)
   const [newAvatar,setNewAvatar] = useState("")
   const uploadBtn= <Feather name="check" size={25} color="#FF6C00" /> 
   const dispatch= useDispatch()
@@ -48,13 +49,10 @@ const ProfileScreen = ({ navigation }) => {
   
   const deleteImageFromStorage = async (url) => {
     try {
-    
     const pictureRef = ref(storage, url);
       await deleteObject(pictureRef);
-    
     } catch (error) {
       console.log(error)
-     
     }
 }
  
@@ -75,8 +73,6 @@ const ProfileScreen = ({ navigation }) => {
     avatar:photoURL
    }, {merge: true})
     }); 
- 
-    
     } catch (error) {
       console.log(error)
        setLoadingAvatar(false)
@@ -84,9 +80,11 @@ const ProfileScreen = ({ navigation }) => {
    }
 
   const deletePost = async (postId, photoURL) => {
+    setLoadingDelete(true)
      const docRef = doc(db, 'posts', postId)
     await deleteDoc(docRef);
     await deleteImageFromStorage(photoURL)
+    setLoadingDelete(false)
   }
   return (
     <>
@@ -102,7 +100,7 @@ const ProfileScreen = ({ navigation }) => {
           <FlatList
            data={posts}
            keyExtractor={(item) => item.id}
-            renderItem={({item})=>ProfileScreenItem(item, navigation, deletePost)}
+            renderItem={({item})=>ProfileScreenItem(item, navigation, deletePost, loadingDelete)}
           />
         </View>
         </View>
