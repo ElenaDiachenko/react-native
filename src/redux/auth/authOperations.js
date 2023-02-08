@@ -4,12 +4,13 @@ import { auth } from '../../firebase/config'
 import { authSlice} from "./authSlice";
 const { changeAuthStatus,updateUserProfile,logout ,changeAvatar} = authSlice.actions;
 
-export const registerUser = ({ login, email, password, avatar }) => async (dispatch) => {
+export const registerUser = ({ login, email, password, avatar }) => async (dispatch ) => {
       try {
-        await createUserWithEmailAndPassword(auth, email, password,avatar);
+        await createUserWithEmailAndPassword(auth, email, password, avatar);
+        
         await updateProfile(auth.currentUser, {
           displayName: login,
-          photoURL:avatar,
+          photoURL: avatar,
         })
         const user = auth.currentUser;
         const currentUser = {

@@ -8,7 +8,8 @@ import {
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     Keyboard,
-    Text,    
+    Text, 
+    Alert
 } from 'react-native';
 import {registerUser} from '../../redux/auth/authOperations'
 import { uploadPhotoToServer } from '../../utils/uploadPhotoToServer';
@@ -48,15 +49,13 @@ const RegistrationScreen = ({ navigation }) => {
   
     const onSubmit = async() => {
         keyboardHide();
-        const {photoURL,storagePath} = await uploadPhotoToServer(avatar, 'avatars');
+        const photoURL = await uploadPhotoToServer(avatar, 'avatars');
         const credentials = {
             login, 
             email,
             password,
             avatar: photoURL,
-            storagePath
         }
-         
        dispatch(registerUser(credentials))
         reset()
     }

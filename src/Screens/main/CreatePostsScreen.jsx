@@ -33,10 +33,8 @@ const CreatePostsScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermissionsAsync();
-      // const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
       const locationPermission = await Location.requestForegroundPermissionsAsync();
       setHasCameraPermission(cameraPermission.status === "granted");
-      // setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
       setHasLocationPermission(locationPermission.status === 'granted');
     })();
   }, []);
