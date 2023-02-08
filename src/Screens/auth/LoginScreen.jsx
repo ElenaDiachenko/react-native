@@ -16,6 +16,7 @@ const image = require('../../../assets/images/auth-bg.jpg')
 import {Input, Title, Button,  LinkAuth} from '../../components'
 
 const LoginScreen = ({ navigation }) => {
+    const [loading, setLoading] = useState(false)
     const dispatch= useDispatch()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -30,17 +31,18 @@ const LoginScreen = ({ navigation }) => {
       const reset = () => {
         setEmail("");
         setPassword("");
-        setLogin("");
     }
 
     const onSubmit = async() => {
         keyboardHide();
+        setLoading(true)
         const credentials = {
             email,
             password
         }
         await dispatch(loginUser(credentials))
-        // reset()
+        setLoading(false)
+        reset()
     }
 
     return (
@@ -67,7 +69,7 @@ const LoginScreen = ({ navigation }) => {
                         />
                         {password ? <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>:null}
                          </View>           
-                        <Button text='Войти' onPress={onSubmit} />
+                        <Button text='Войти' onPress={onSubmit} loading={loading} />
                         <LinkAuth title='Нет аккаунта? Зарегистрироваться' navigate={navigate}/>
                     </View>
                 </View>

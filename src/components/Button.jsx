@@ -1,10 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 
-export const Button = ({text, onPress}) => {
+export const Button = ({text, onPress, loading}) => {
   return (
       <TouchableOpacity activeOpacity={0.8} style={styles.btn} onPress={onPress}>
-        <Text style={styles.titleBtn}>{text}</Text>
+        {loading ? <ActivityIndicator size='large' color = "#ffffff" />:<Text style={styles.titleBtn}>{text}</Text>}
       </TouchableOpacity>
   )
 }

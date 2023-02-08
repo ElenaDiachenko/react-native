@@ -9,7 +9,6 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     Text, 
-    Alert
 } from 'react-native';
 import {registerUser} from '../../redux/auth/authOperations'
 import { uploadPhotoToServer } from '../../utils/uploadPhotoToServer';
@@ -20,6 +19,7 @@ import {Input, Title, Button, Avatar,LinkAuth} from '../../components'
 const RegistrationScreen = ({ navigation }) => {
     const dispatch = useDispatch();
 
+    const [loading, setLoading] = useState(false)
     const [avatar,setAvatar] = useState("")
     const [login, setLogin] = useState("");
     const [email, setEmail] = useState("");
@@ -49,6 +49,7 @@ const RegistrationScreen = ({ navigation }) => {
   
     const onSubmit = async() => {
         keyboardHide();
+        setLoading(true)
         const photoURL = await uploadPhotoToServer(avatar, 'avatars');
         const credentials = {
             login, 
@@ -56,7 +57,8 @@ const RegistrationScreen = ({ navigation }) => {
             password,
             avatar: photoURL,
         }
-       dispatch(registerUser(credentials))
+      await dispatch(registerUser(credentials))
+      setLoading(false)
         reset()
     }
 
@@ -90,7 +92,7 @@ const RegistrationScreen = ({ navigation }) => {
                         />
                         {password ? <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>:null}
                          </View>           
-                        <Button text='Зарегистрироваться' onPress={onSubmit } />
+                        <Button text='Зарегистрироваться' onPress={onSubmit } loading={loading}/>
                         <LinkAuth title='Уже есть аккаунт? Войти' navigate={navigate} />
                     </View>
                 </View>

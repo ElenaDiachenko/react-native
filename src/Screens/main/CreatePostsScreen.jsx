@@ -16,7 +16,6 @@ import { pickImage } from '../../utils/pickImage';
 
 
 const CreatePostsScreen = ({ navigation }) => {
-  //  let cameraRef = useRef();
   const [loading, setLoading] = useState(false)
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasLocationPermission, setHasLocationPermission] = useState(null);
