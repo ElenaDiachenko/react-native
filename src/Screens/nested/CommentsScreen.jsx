@@ -66,6 +66,7 @@ export const CommentsScreen = ({ route }) => {
       await setDoc(docRef, {
         commentsCount:comments.length+1
       }, { merge: true })
+
       setComment("");
       keyboardHide()
     } catch (error) {
@@ -110,7 +111,8 @@ export const CommentsScreen = ({ route }) => {
           borderTopLeftRadius: currentUser ? 0 : 6,
           borderTopRightRadius: currentUser ? 6 : 0,
         }}>
-        <Text style={{ lineHeight: 18, fontSize: 13, color: "#212121" }}>{item.comment}</Text>
+          <Text style={{ lineHeight: 18, fontSize: 13, color: "#FF6C00", fontFamily:'Roboto-Bold' }}>{item.login}</Text>
+          <Text style={{ lineHeight: 18, fontSize: 13, color: "#212121" }}>{item.comment}</Text>
           <Text style={{
             ...styles.date,
           textAlign: !currentUser ? 'left' : 'right',

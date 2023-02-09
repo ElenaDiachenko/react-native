@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import * as Location from 'expo-location';
 
 export const getLocation = async () => {

@@ -15,7 +15,7 @@ import { getLocation } from '../../utils/getLocation';
 import { pickImage } from '../../utils/pickImage';
 
 
-const CreatePostsScreen = ({ navigation }) => {
+const CreatePostsScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false)
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasLocationPermission, setHasLocationPermission] = useState(null);
@@ -29,6 +29,12 @@ const CreatePostsScreen = ({ navigation }) => {
   const [coords, setCoords] = useState(null)
   const { userId, login, avatar, email } = useAuth()
 
+  useEffect(() => {
+    setLocation(route.params?.place);
+    setCoords(route.params?.choosenCoords)
+  }, [route.params?.place, route.params?.choosenCoords])
+  
+  
   useEffect(() => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermissionsAsync();
@@ -54,9 +60,12 @@ const CreatePostsScreen = ({ navigation }) => {
     const takePhotoWithLocationFromGallery = async () => {
       try {
         const imagePath = await pickImage();
-      const {coords,city,country} = await getLocation()
-       setLocation(`${city}, ${country}`);
-        setCoords(coords);
+        if (!location && !coords) {
+          const { coords, city, country } = await getLocation()
+          setLocation(`${city}, ${country}`);
+          setCoords(coords);
+        }
+       
         setPhoto(imagePath);
       } catch (error) {
         console.log(error)
@@ -73,9 +82,12 @@ const CreatePostsScreen = ({ navigation }) => {
     };
 
     const { uri } = await cameraRef.takePictureAsync(options);
-    const {coords,city,country} = await getLocation()
+    if (!location && !coords) {
+      const {coords,city,country} = await getLocation()
      setLocation(`${city}, ${country}`);
      setCoords(coords);
+     }
+  
      setPhoto(uri);
     setStartCamera(true)
   } catch (error) {
@@ -101,7 +113,19 @@ const CreatePostsScreen = ({ navigation }) => {
     setLocation("");
     setPhoto('');
   }
-  
+  const changeLocation = async () => {
+    let location = coords;
+    let title = ' You are here.'
+    if (!photo) {
+      const { coords } = await getLocation();
+      location = coords;
+    }
+    navigation.navigate("Map", {
+      location,
+      title,
+      create:true,
+    })
+  }
 
   const publishPost = async () => {
     if (photo && coords) {
@@ -195,12 +219,19 @@ const CreatePostsScreen = ({ navigation }) => {
                   onChangeText={setLocation}
                   value={location}
                 />
+                <TouchableOpacity
+                   style={styles.locationIcon}
+            onPress={()=>changeLocation()}
+                activeOpacity={0.8}
+                >
                 <Feather
                   name="map-pin"
                   size={24}
                   color="#BDBDBD"
-                  style={styles.locationIcon}
-                />
+                  // style={styles.locationIcon}
+                  // onPress={changeLocation}
+                  />
+                  </TouchableOpacity>
               </View>
                <TouchableOpacity
               onPress={publishPost}
