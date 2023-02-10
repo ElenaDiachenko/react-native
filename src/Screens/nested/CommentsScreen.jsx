@@ -148,7 +148,7 @@ export const CommentsScreen = ({ route }) => {
               <TextInput
                 value={comment}
                onChangeText={setComment}
-                placeholder='Комментировать...'
+                placeholder='Comment...'
                 placeholderTextColor='#BDBDBD'
                 onFocus={onFocusCommentInput}
                 onBlur={onBlurCommentInput}
