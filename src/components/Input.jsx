@@ -19,7 +19,7 @@ export const Input = ({
   };
 
   const handleOnBlur = () => {
-    setIsKeyboard(true);
+    setIsKeyboard(false);
     setIsFocused(false);
   };
   

@@ -70,7 +70,7 @@ const RegistrationScreen = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.mainContainer}>
         <ImageBackground source={image}  style={styles.imageBg}>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : null}>
                 <View style={styles.container}>
                     <Avatar uri={avatar } pickImage={chooseImage}  />
                     <View style={styles.form}>
