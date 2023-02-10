@@ -49,28 +49,28 @@ const LoginScreen = ({ navigation }) => {
        <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.mainContainer}>
         <ImageBackground source={image}  style={styles.imageBg}>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : null}>
                 <View style={styles.container}>
                    
                     <View style={styles.form}>
-                        <Title text="Войти" />
+                        <Title text="Sign In" />
                         <Input  value={email}
                             onChangeText={setEmail}
-                            placeholder={"Адрес электронной почты"}
+                            placeholder={"Email adress"}
                             setIsKeyboard={setIsKeyboard}
                             keyboardType='email-address'
                         />
                         <View style={styles.password}>
                         <Input value={password}
                             onChangeText={setPassword}
-                            placeholder={"Пароль"}
+                            placeholder={"Password"}
                             secureTextEntry={showPwd} 
                             setIsKeyboard={setIsKeyboard}
                         />
-                        {password ? <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>:null}
+                        {password ? <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Hide":"Show" }</Text>:null}
                          </View>           
-                        <Button text='Войти' onPress={onSubmit} loading={loading} />
-                        <LinkAuth title='Нет аккаунта? Зарегистрироваться' navigate={navigate}/>
+                        <Button text='Sign In' onPress={onSubmit} loading={loading} />
+                        <LinkAuth title="Don't have an account? Sign Up" navigate={navigate}/>
                     </View>
                 </View>
            </KeyboardAvoidingView>

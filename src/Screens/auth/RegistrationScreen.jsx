@@ -74,29 +74,29 @@ const RegistrationScreen = ({ navigation }) => {
                 <View style={styles.container}>
                     <Avatar uri={avatar } pickImage={chooseImage}  />
                     <View style={styles.form}>
-                        <Title text="Регистрация" />
+                        <Title text="Sign Up" />
                         <Input value={login}
                             onChangeText={setLogin}
-                            placeholder={"Логин"}
+                            placeholder={"Login"}
                             setIsKeyboard={setIsKeyboard}
                         />
                         <Input  value={email}
                             onChangeText={setEmail}
-                            placeholder={"Адрес электронной почты"}
+                            placeholder={"Email adress"}
                             setIsKeyboard={setIsKeyboard}
                             keyboardType='email-address'
                         />
                         <View style={styles.password}>
                         <Input value={password}
                             onChangeText={setPassword}
-                            placeholder={"Пароль"}
+                            placeholder={"Password"}
                             secureTextEntry={showPwd} 
                             setIsKeyboard={setIsKeyboard}
                         />
-                        {password ? <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Скрыть":"Показать" }</Text>:null}
+                        {password ? <Text onPress={() => { setShowPwd(!showPwd) }} style={styles.text}>{!showPwd?"Hide":"Show" }</Text>:null}
                          </View>           
-                        <Button text='Зарегистрироваться' onPress={onSubmit } loading={loading}/>
-                        <LinkAuth title='Уже есть аккаунт? Войти' navigate={navigate} />
+                        <Button text='Sign Up' onPress={onSubmit } loading={loading}/>
+                        <LinkAuth title='Already have an account? Sign In' navigate={navigate} />
                     </View>
                 </View>
            </KeyboardAvoidingView>

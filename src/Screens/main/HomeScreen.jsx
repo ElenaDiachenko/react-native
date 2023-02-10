@@ -28,7 +28,7 @@ const HomeScreen = () => {
         name='Posts'
         component={PostsScreen}
         options={{
-          title: 'Публикации',
+          title: 'Posts',
           headerRight: () => (
             <TouchableOpacity
               style={{ width: 24, marginRight: 16 }}
@@ -47,14 +47,14 @@ const HomeScreen = () => {
         name='Comments'
         component={CommentsScreen}
         options={{
-          title: 'Комментарии',
+          title: 'Comments',
         }}
       />
       <NestedStack.Screen
         name='Map'
         component={MapScreen}
         options={{
-          title: 'Карта',
+          title: 'Map',
         }}
       />
     </NestedStack.Navigator>

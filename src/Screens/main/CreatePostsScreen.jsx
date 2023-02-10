@@ -190,21 +190,21 @@ const CreatePostsScreen = ({ navigation, route }) => {
                 activeOpacity={0.8}
               >
                 <Text style={styles.uploadEditButton}>
-                  Загрузить фото из галереи
+                  Load a photo from the gallery
                 </Text>
               </TouchableOpacity>):(<TouchableOpacity
                onPress={removePhoto}
                 activeOpacity={0.8}
               >
                 <Text style={styles.uploadEditButton}>
-                  Редактировать фото
+                  Edit photo
                 </Text>
               </TouchableOpacity>)}
             </View>
             <View>
                 <TextInput
                   style={styles.input}
-                  placeholder='Название...'
+                  placeholder='Title ...'
                   placeholderTextColor="#BDBDBD"
                   onFocus={() => setIsKeyboard(true)}
                   onChangeText={setDescription}
@@ -213,7 +213,7 @@ const CreatePostsScreen = ({ navigation, route }) => {
               <View style={{marginBottom: 32}}>
                 <TextInput
                   style={{ ...styles.input, paddingLeft: 28}}
-                  placeholder='Местность...'
+                  placeholder='Locality...'
                   placeholderTextColor="#BDBDBD"
                   onFocus={() => setIsKeyboard(true)}
                   onChangeText={setLocation}
@@ -228,8 +228,6 @@ const CreatePostsScreen = ({ navigation, route }) => {
                   name="map-pin"
                   size={24}
                   color="#BDBDBD"
-                  // style={styles.locationIcon}
-                  // onPress={changeLocation}
                   />
                   </TouchableOpacity>
               </View>
@@ -241,7 +239,7 @@ const CreatePostsScreen = ({ navigation, route }) => {
               {loading ? <ActivityIndicator size='large' color = "#ffffff" /> :<Text
                 style={{ ...styles.textBtnSubmit, color: photo ? '#ffffff' : '#BDBDBD' }}
               >
-                Опубликовать
+                Publish
               </Text>}
             </TouchableOpacity>
             </View>

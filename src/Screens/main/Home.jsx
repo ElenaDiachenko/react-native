@@ -72,12 +72,12 @@ const Home = () => {
           <MainTab.Screen
           name="Create"
           component={CreatePostsScreen}
-          options={{ headerTitle: "Создать публикацию" }}/>
+          options={{ headerTitle: "Create post" }}/>
           
           <MainTab.Screen name="Profile"
           component={ProfileScreen}
           options={{ 
-          headerTitle: "Профиль",
+          headerTitle: "Profile",
           headerRight: () => (
             <TouchableOpacity
               style={{ width: 24, marginRight: 16 }}
