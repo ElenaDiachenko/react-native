@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getStorage,deleteObject, ref } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
-import firebase from "firebase/compat/app";
+
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY_FIREBASE,
