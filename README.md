@@ -1,5 +1,5 @@
 
-# Small blog-app
+# Blog app with authorization and personal account
 
 This project was created with 
 [React Native](https://reactnative.dev)
